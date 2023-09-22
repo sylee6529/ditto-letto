@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    active: local
+
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true
+
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/maru
+    driver-class-name: org.postgresql.Driver
+    username: bamdoliro
+    password: bamdoliro
+
+debug: true

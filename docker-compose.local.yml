@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  mysql:
+    container_name: letter.local.db
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: "unithon"
+      POSTGRES_PASSWORD: "unithon"
+      POSTGRES_DB: "letter"
+    ports:
+      - "5432:5432"
