@@ -1,11 +1,12 @@
 package center.unit.letter.presentation.letter.dto.response;
 
 import center.unit.letter.domain.letter.type.DirectionType;
+import center.unit.letter.domain.letter.type.LetterType;
+import center.unit.letter.domain.letter.type.MediumType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,8 +15,8 @@ import java.time.LocalDateTime;
 public class MyLetterResponse {
 
     private String phoneNumber;
-    private String mediumType;
-    private String type;
+    private MediumType mediumType;
+    private LetterType type;
     private int progressLevel;
     private String previewText;
     private DirectionType direction;
