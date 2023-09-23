@@ -29,7 +29,7 @@ public class KakaoAuthService {
     private String KAKAO_REDIRECT_URI;
 
     public AccessTokenResponse requestToken(String code) {
-        // 1. kakao request
+        // KAKAO 토큰 요청
         KakaoAuthTokenResponse kakaoAuthTokenResponse = kakaoAuthClient.requestAuthToken(
             GRANT_TYPE_AUTHORIZATION_CODE,
             KAKAO_CLIENT_KEY,
@@ -42,8 +42,10 @@ public class KakaoAuthService {
             throw new RuntimeException("KAKAO 인증에 실패했습니다.");
         }
 
+        // KAKAO 사용자 정보 조회
         KakaoUserInfoResponse kakaoUserInfo = getKakaoUserInfo(kakaoAuthTokenResponse.accessToken());
 
+        // 사용자 정보 검증 및 최초 로그인 시 사용자 정보 등록
         User user = userRepository.findByKakaoUserId(kakaoUserInfo.id())
             .orElseGet(() -> {
                 User newUser = new User(
@@ -54,6 +56,7 @@ public class KakaoAuthService {
                 return userRepository.save(newUser);
             });
 
+        // AccessToken 반환
         return new AccessTokenResponse(tokenService.generateAccessToken(user.getPhoneNumber()));
     }
 
