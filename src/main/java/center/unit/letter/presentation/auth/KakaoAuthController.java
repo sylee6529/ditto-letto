@@ -19,7 +19,7 @@ public class KakaoAuthController {
 
     private final KakaoAuthService kakaoAuthService;
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public SingleCommonResponse<AccessTokenResponse> login(@RequestParam("code") String code) {
         return SingleCommonResponse.ok(kakaoAuthService.requestToken(code));
     }
