@@ -25,7 +25,7 @@ class CyworldServiceTest {
                 "아니...\n" +
                 "머리가 아닌.....\n" +
                 "맘으로.....우는 내가 좋다.....";
-        String cyworldText = cyworldService.execute(text).replace("<br />", "\n");
+        String cyworldText = cyworldService.execute(text);
         System.out.println(cyworldText);
     }
 }

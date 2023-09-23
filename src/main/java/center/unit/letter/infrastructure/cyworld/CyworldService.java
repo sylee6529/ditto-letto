@@ -13,7 +13,8 @@ public class CyworldService {
         String cyworldText = cyworldClient.convert(
                 "black",
                 text
-        ).split("\\|\\^!#!\\^\\|")[1];
+        ).split("\\|\\^!#!\\^\\|")[1]
+                .replace("<br />", "\n");
 
         return cyworldText.trim();
     }

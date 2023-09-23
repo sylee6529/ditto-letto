@@ -1,0 +1,65 @@
+package center.unit.letter.domain.letter;
+
+import center.unit.letter.domain.letter.type.LetterType;
+import center.unit.letter.domain.letter.type.MediumType;
+import center.unit.letter.domain.user.User;
+import center.unit.letter.shared.entity.BaseTimeEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "tbl_letter")
+@Entity
+public class Letter extends BaseTimeEntity {
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    private Long id;
+
+    @Column(nullable = false)
+    private String text;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private MediumType mediumType;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private LetterType type;
+
+    @Column(nullable = false)
+    private LocalDateTime arriveAt;
+
+    @JoinColumn(name = "to_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User to;
+
+    @JoinColumn(name = "from_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User from;
+
+    public Letter(String text, MediumType mediumType, LetterType type, LocalDateTime arriveAt, User to, User from) {
+        this.text = text;
+        this.mediumType = mediumType;
+        this.type = type;
+        this.arriveAt = arriveAt;
+        this.to = to;
+        this.from = from;
+    }
+}
