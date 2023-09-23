@@ -62,4 +62,10 @@ public class Letter extends BaseTimeEntity {
         this.to = to;
         this.from = from;
     }
+
+    public void isTo(User user) {
+        if (!user.getId().equals(to.getId())) {
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+    }
 }
