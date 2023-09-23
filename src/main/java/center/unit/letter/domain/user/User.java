@@ -28,11 +28,11 @@ public class User extends BaseTimeEntity {
     private String phoneNumber;
 
     @Column(nullable = false)
-    private String password;
+    private long kakaoUserId;
 
-    public User(String name, String phoneNumber, String password) {
+    public User(String name, String phoneNumber, long kakaoUserId) {
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.password = password;
+        this.kakaoUserId = kakaoUserId;
     }
 }
