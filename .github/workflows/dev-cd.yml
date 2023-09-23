@@ -31,15 +31,15 @@ jobs:
               ports: 8080
               env:
                 - name: DB_NAME
-                  value: ${{ secrets.DEV_DB_NAME }}
+                  value: ${{ secrets.DB_NAME }}
                 - name: DB_USERNAME
-                  value: ${{ secrets.DEV_DB_USERNAME }}
+                  value: ${{ secrets.DB_USERNAME }}
                 - name: DB_HOST
-                  value: ${{ secrets.DEV_DB_HOST }}
+                  value: ${{ secrets.DB_HOST }}
                 - name: DB_PORT
-                  value: ${{ secrets.DEV_DB_PORT }}
+                  value: ${{ secrets.DB_PORT }}
                 - name: DB_PASSWORD
-                  value: ${{ secrets.DEV_DB_PASSWORD }}
+                  value: ${{ secrets.DB_PASSWORD }}
                 - name: SPRING_PROFILES_ACTIVE
                   value: prod
                 - name: TZ
