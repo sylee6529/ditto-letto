@@ -1,9 +1,11 @@
 package center.unit.letter.presentation.letter;
 
+import center.unit.letter.application.letter.QueryLetterCountService;
 import center.unit.letter.application.letter.QueryLetterService;
 import center.unit.letter.application.letter.SendLetterService;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.presentation.letter.dto.request.SendLetterRequest;
+import center.unit.letter.presentation.letter.dto.response.LetterCountResponse;
 import center.unit.letter.presentation.letter.dto.response.LetterResponse;
 import center.unit.letter.presentation.letter.dto.response.SendLetterResponse;
 import center.unit.letter.shared.auth.AuthenticationPrincipal;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class LetterController {
 
     private final SendLetterService sendLetterService;
     private final QueryLetterService queryLetterService;
+    private final QueryLetterCountService queryLetterCountService;
 
     @PostMapping
     public SingleCommonResponse<SendLetterResponse> sendLetter(
@@ -43,6 +47,16 @@ public class LetterController {
     ) {
         return CommonResponse.ok(
                 queryLetterService.execute(user, id)
+        );
+    }
+
+    @GetMapping("/count")
+    public SingleCommonResponse<LetterCountResponse> queryLetterCount(
+            @AuthenticationPrincipal User user,
+            @RequestParam(name = "phone-number") String phoneNumber
+    ) {
+        return CommonResponse.ok(
+                queryLetterCountService.execute(user, phoneNumber)
         );
     }
 }
