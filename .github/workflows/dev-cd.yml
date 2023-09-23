@@ -40,6 +40,12 @@ jobs:
                   value: ${{ secrets.DB_PORT }}
                 - name: DB_PASSWORD
                   value: ${{ secrets.DB_PASSWORD }}
+                - name: JWT_SECRET
+                  value: ${{ secrets.JWT_SECRET }}
+                - name: KAKAO_API_KEY
+                  value: ${{ secrets.KAKAO_API_KEY }}
+                - name: KAKAO_REDIRECT_URI
+                  value: ${{ secrets.KAKAO_REDIRECT_URI }}
                 - name: SPRING_PROFILES_ACTIVE
                   value: prod
                 - name: TZ
