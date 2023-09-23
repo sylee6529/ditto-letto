@@ -35,4 +35,9 @@ public class User extends BaseTimeEntity {
         this.phoneNumber = phoneNumber;
         this.kakaoUserId = kakaoUserId;
     }
+
+    public void update(String name, String phoneNumber) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
 }
