@@ -7,6 +7,8 @@ import center.unit.letter.presentation.letter.dto.request.SendLetterRequest;
 import center.unit.letter.presentation.letter.dto.response.LetterResponse;
 import center.unit.letter.presentation.letter.dto.response.SendLetterResponse;
 import center.unit.letter.shared.auth.AuthenticationPrincipal;
+import center.unit.letter.shared.response.CommonResponse;
+import center.unit.letter.shared.response.SingleCommonResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,18 +27,22 @@ public class LetterController {
     private final QueryLetterService queryLetterService;
 
     @PostMapping
-    public SendLetterResponse sendLetter(
+    public SingleCommonResponse<SendLetterResponse> sendLetter(
             @AuthenticationPrincipal User user,
             @RequestBody @Valid SendLetterRequest request
     ) {
-        return sendLetterService.execute(user, request);
+        return CommonResponse.ok(
+                sendLetterService.execute(user, request)
+        );
     }
 
     @GetMapping("/{letter-id}")
-    public LetterResponse queryLetter(
+    public SingleCommonResponse<LetterResponse> queryLetter(
             @AuthenticationPrincipal User user,
             @PathVariable(name = "letter-id") Long id
     ) {
-        return queryLetterService.execute(user, id);
+        return CommonResponse.ok(
+                queryLetterService.execute(user, id)
+        );
     }
 }
