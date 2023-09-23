@@ -32,7 +32,7 @@ public class Letter extends BaseTimeEntity {
     @Id
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 144)
     private String text;
 
     @Column(nullable = false)
@@ -54,11 +54,11 @@ public class Letter extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User from;
 
-    public Letter(String text, MediumType mediumType, LetterType type, LocalDateTime arriveAt, User to, User from) {
+    public Letter(String text, MediumType mediumType, LetterType type, User to, User from) {
         this.text = text;
         this.mediumType = mediumType;
         this.type = type;
-        this.arriveAt = arriveAt;
+        this.arriveAt = LocalDateTime.now().plusSeconds(mediumType.getSpeed());
         this.to = to;
         this.from = from;
     }
