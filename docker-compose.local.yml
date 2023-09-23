@@ -8,5 +8,6 @@ services:
       POSTGRES_USER: "unithon"
       POSTGRES_PASSWORD: "unithon"
       POSTGRES_DB: "letter"
+      TZ: "Asia/Seoul"
     ports:
       - "5432:5432"

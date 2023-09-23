@@ -1,16 +1,9 @@
 package center.unit.letter.presentation.letter;
 
-import center.unit.letter.application.letter.DeleteLetterService;
-import center.unit.letter.application.letter.QueryLetterByPhoneNumberService;
-import center.unit.letter.application.letter.QueryLetterCountService;
-import center.unit.letter.application.letter.QueryLetterService;
-import center.unit.letter.application.letter.SendLetterService;
+import center.unit.letter.application.letter.*;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.presentation.letter.dto.request.SendLetterRequest;
-import center.unit.letter.presentation.letter.dto.response.LetterCountResponse;
-import center.unit.letter.presentation.letter.dto.response.LetterResponse;
-import center.unit.letter.presentation.letter.dto.response.LetterSimpleResponse;
-import center.unit.letter.presentation.letter.dto.response.SendLetterResponse;
+import center.unit.letter.presentation.letter.dto.response.*;
 import center.unit.letter.shared.auth.AuthenticationPrincipal;
 import center.unit.letter.shared.response.CommonResponse;
 import center.unit.letter.shared.response.ListCommonResponse;
@@ -28,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RequestMapping("/letter")
 @RestController
@@ -38,6 +33,7 @@ public class LetterController {
     private final QueryLetterByPhoneNumberService queryLetterByPhoneNumberService;
     private final QueryLetterCountService queryLetterCountService;
     private final DeleteLetterService deleteLetterService;
+    private final QueryMyLetterService queryMyLetterService;
 
     @PostMapping
     public SingleCommonResponse<SendLetterResponse> sendLetter(
@@ -85,5 +81,14 @@ public class LetterController {
         @AuthenticationPrincipal User user,
         @PathVariable(name = "letter-id") Long letterId) {
         deleteLetterService.deleteLetter(user, letterId);
+    }
+
+    @GetMapping("/my")
+    public ListCommonResponse<MyLetterResponse> queryLetterCount(
+            @AuthenticationPrincipal User user
+    ) {
+        return CommonResponse.ok(
+                queryMyLetterService.execute(user)
+        );
     }
 }
