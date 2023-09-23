@@ -24,15 +24,15 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
     @Column(nullable = false)
-    private String password;
+    private long kakaoUserId;
 
-    public User(String name, String phoneNumber, String password) {
+    public User(String name, String phoneNumber, long kakaoUserId) {
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.password = password;
+        this.kakaoUserId = kakaoUserId;
     }
 }
