@@ -18,8 +18,6 @@ public class LetterArriveCheckScheduler {
     @Scheduled(fixedDelay = 5000)
     @Transactional
     public void checkArriveAndPushNotification() {
-        log.info("run batch");
-
         letterRepository.findAllOfNotArrived()
             .forEach(letter -> {
                 if (LocalDateTime.now().isAfter(letter.getArriveAt())) {
