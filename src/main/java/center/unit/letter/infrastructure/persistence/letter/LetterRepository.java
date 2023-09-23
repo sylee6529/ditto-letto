@@ -27,7 +27,7 @@ public interface LetterRepository extends CrudRepository<Letter, Long> {
             "    CASE WHEN l.from_id = :userId THEN 'OUT' " +
             "        WHEN l.to_id = :userId THEN 'IN' " +
             "        ELSE NULL " +
-            "    END AS direction, l.arrive_at " +
+            "    END AS direction, l.arrived " +
             "FROM tbl_letter l " +
             "JOIN tbl_user u ON u.id = l.from_id " +
             "WHERE l.from_id = :userId OR l.to_id = :userId ORDER BY l.arrive_at DESC")

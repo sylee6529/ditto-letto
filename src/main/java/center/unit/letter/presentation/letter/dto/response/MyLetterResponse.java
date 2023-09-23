@@ -20,5 +20,5 @@ public class MyLetterResponse {
     private int progressLevel;
     private String previewText;
     private DirectionType direction;
-    private LocalDateTime arrivedAt;
+    private boolean arrived;
 }

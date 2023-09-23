@@ -84,7 +84,7 @@ public class LetterController {
     }
 
     @GetMapping("/my")
-    public ListCommonResponse<MyLetterResponse> queryLetterCount(
+    public SingleCommonResponse<MyLetterListResponse> queryLetterCount(
             @AuthenticationPrincipal User user
     ) {
         return CommonResponse.ok(
