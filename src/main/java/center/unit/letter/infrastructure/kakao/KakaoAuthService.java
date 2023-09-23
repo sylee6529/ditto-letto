@@ -10,6 +10,7 @@ import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -42,22 +43,7 @@ public class KakaoAuthService {
             throw new RuntimeException("KAKAO 인증에 실패했습니다.");
         }
 
-        // KAKAO 사용자 정보 조회
-        KakaoUserInfoResponse kakaoUserInfo = getKakaoUserInfo(kakaoAuthTokenResponse.accessToken());
-
-        // 사용자 정보 검증 및 최초 로그인 시 사용자 정보 등록
-        User user = userRepository.findByKakaoUserId(kakaoUserInfo.id())
-            .orElseGet(() -> {
-                User newUser = new User(
-                    kakaoUserInfo.kakaoAccount().profile().nickname(),
-                    generatePhoneNumber(),
-                    kakaoUserInfo.id()
-                );
-                return userRepository.save(newUser);
-            });
-
-        // AccessToken 반환
-        return new AccessTokenResponse(tokenService.generateAccessToken(user.getPhoneNumber()));
+        return requestTokenByKakaoAccessToken(kakaoAuthTokenResponse.accessToken());
     }
 
     private KakaoUserInfoResponse getKakaoUserInfo(String accessToken) {
@@ -75,5 +61,23 @@ public class KakaoAuthService {
         }
 
         return sb.toString();
+    }
+
+    @Transactional
+    public AccessTokenResponse requestTokenByKakaoAccessToken(String kakaoAccessToken) {
+        KakaoUserInfoResponse kakaoUserInfo = getKakaoUserInfo(kakaoAccessToken);
+
+        User user = userRepository.findByKakaoUserId(kakaoUserInfo.id())
+            .orElseGet(() -> {
+                User newUser = new User(
+                    kakaoUserInfo.kakaoAccount().profile().nickname(),
+                    generatePhoneNumber(),
+                    kakaoUserInfo.id()
+                );
+                return userRepository.save(newUser);
+            });
+
+        // AccessToken 반환
+        return new AccessTokenResponse(tokenService.generateAccessToken(user.getPhoneNumber()));
     }
 }
