@@ -15,11 +15,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 
 @Getter
@@ -46,6 +45,9 @@ public class Letter extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime arriveAt;
 
+    @Column(nullable = false)
+    private boolean arrived;
+
     @JoinColumn(name = "to_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private User to;
@@ -61,11 +63,16 @@ public class Letter extends BaseTimeEntity {
         this.arriveAt = LocalDateTime.now().plusSeconds(mediumType.getSpeed());
         this.to = to;
         this.from = from;
+        this.arrived = false;
     }
 
     public void isTo(User user) {
         if (!user.getId().equals(to.getId())) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
+    }
+
+    public void arrive() {
+        this.arrived = true;
     }
 }
