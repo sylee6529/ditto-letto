@@ -1,5 +1,6 @@
 package center.unit.letter.presentation.letter;
 
+import center.unit.letter.application.letter.DeleteLetterService;
 import center.unit.letter.application.letter.QueryLetterByPhoneNumberService;
 import center.unit.letter.application.letter.QueryLetterCountService;
 import center.unit.letter.application.letter.QueryLetterService;
@@ -16,12 +17,15 @@ import center.unit.letter.shared.response.ListCommonResponse;
 import center.unit.letter.shared.response.SingleCommonResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -33,44 +37,53 @@ public class LetterController {
     private final QueryLetterService queryLetterService;
     private final QueryLetterByPhoneNumberService queryLetterByPhoneNumberService;
     private final QueryLetterCountService queryLetterCountService;
+    private final DeleteLetterService deleteLetterService;
 
     @PostMapping
     public SingleCommonResponse<SendLetterResponse> sendLetter(
-            @AuthenticationPrincipal User user,
-            @RequestBody @Valid SendLetterRequest request
+        @AuthenticationPrincipal User user,
+        @RequestBody @Valid SendLetterRequest request
     ) {
         return CommonResponse.ok(
-                sendLetterService.execute(user, request)
+            sendLetterService.execute(user, request)
         );
     }
 
     @GetMapping("/{letter-id}")
     public SingleCommonResponse<LetterResponse> queryLetter(
-            @AuthenticationPrincipal User user,
-            @PathVariable(name = "letter-id") Long id
+        @AuthenticationPrincipal User user,
+        @PathVariable(name = "letter-id") Long id
     ) {
         return CommonResponse.ok(
-                queryLetterService.execute(user, id)
+            queryLetterService.execute(user, id)
         );
     }
 
     @GetMapping("/count")
     public SingleCommonResponse<LetterCountResponse> queryLetterCount(
-            @AuthenticationPrincipal User user,
-            @RequestParam(name = "phone-number") String phoneNumber
+        @AuthenticationPrincipal User user,
+        @RequestParam(name = "phone-number") String phoneNumber
     ) {
         return CommonResponse.ok(
-                queryLetterCountService.execute(user, phoneNumber)
+            queryLetterCountService.execute(user, phoneNumber)
         );
     }
 
     @GetMapping
     public ListCommonResponse<LetterSimpleResponse> queryLetterByPhoneNumber(
-            @AuthenticationPrincipal User user,
-            @RequestParam(name = "phone-number") String phoneNumber
+        @AuthenticationPrincipal User user,
+        @RequestParam(name = "phone-number") String phoneNumber
     ) {
         return CommonResponse.ok(
-                queryLetterByPhoneNumberService.execute(user, phoneNumber)
+            queryLetterByPhoneNumberService.execute(user, phoneNumber)
         );
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{letter-id}")
+    public void deleteLetter(
+        @AuthenticationPrincipal User user,
+        @PathVariable(name = "letter-id") Long letterId) {
+        deleteLetterService.deleteLetter(user, letterId);
     }
 }
