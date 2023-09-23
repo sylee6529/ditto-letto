@@ -19,7 +19,6 @@ public class GlobalExceptionHandler {
         String message = e.getMessage();
         HttpStatus status = e.getHttpStatus();
 
-        log.error("code = {}, message = {}", code, message);
         final ErrorResponse response = new ErrorResponse(code, message);
 
         return ResponseEntity.status(status).body(response);
