@@ -95,6 +95,15 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<ErrorResponse> handleException(final IllegalArgumentException e) {
+        final ErrorResponse response = new ErrorResponse(GlobalErrorCode.CONFLICT, e.getMessage());
+
+        return ResponseEntity
+                .status(GlobalErrorCode.CONFLICT.getStatus())
+                .body(response);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         e.printStackTrace();

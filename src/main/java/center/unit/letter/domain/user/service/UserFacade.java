@@ -13,6 +13,6 @@ public class UserFacade {
 
     public User getUser(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
     }
 }
