@@ -7,12 +7,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -21,8 +20,8 @@ public class TokenService {
     private final JwtProperties jwtProperties;
     private final UserFacade userFacade;
 
-    public String generateAccessToken(String uuid) {
-        return generateToken(uuid, jwtProperties.getAccessExpirationTime());
+    public String generateAccessToken(String phoneNumber) {
+        return generateToken(phoneNumber, jwtProperties.getAccessExpirationTime());
     }
 
     private String generateToken(String phoneNumber, Long time) {
@@ -31,11 +30,11 @@ public class TokenService {
         Date now = new Date();
 
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + time))
-                .signWith(getSigningKey(jwtProperties.getSecretKey()), SignatureAlgorithm.HS256)
-                .compact();
+            .setClaims(claims)
+            .setIssuedAt(now)
+            .setExpiration(new Date(now.getTime() + time))
+            .signWith(getSigningKey(jwtProperties.getSecretKey()), SignatureAlgorithm.HS256)
+            .compact();
     }
 
     public User getUser(String token) {
@@ -49,10 +48,10 @@ public class TokenService {
     private Claims extractAllClaims(String token) {
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey(jwtProperties.getSecretKey()))
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                .setSigningKey(getSigningKey(jwtProperties.getSecretKey()))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
         } catch (Exception e) {
             throw new IllegalArgumentException();
         }

@@ -19,6 +19,11 @@ jwt:
   access-expiration-time: 1296000000 # 15일
   prefix: Bearer
   secret-key: ${JWT_SECRET}
+
+kakao:
+  api:
+    client-key: ${KAKAO_API_KEY}
+    redirect-uri: ${KAKAO_REDIRECT_URI}
 ---
 spring:
   config:
