@@ -6,10 +6,12 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MediumType {
-    WALK(4),
-    RUN(3),
-    BICYCLE(2),
-    PLAIN(1);
+    WALK(60),
+    RUN(50),
+    BICYCLE(40),
+    HORSE(30),
+    CAR(20),
+    PLAIN(10);
 
     private final int speed;
 }
