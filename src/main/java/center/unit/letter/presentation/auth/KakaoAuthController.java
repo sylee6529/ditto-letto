@@ -2,6 +2,7 @@ package center.unit.letter.presentation.auth;
 
 import center.unit.letter.infrastructure.kakao.KakaoAuthService;
 import center.unit.letter.presentation.auth.dto.response.AccessTokenResponse;
+import center.unit.letter.shared.response.SingleCommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +17,7 @@ public class KakaoAuthController {
     private final KakaoAuthService kakaoAuthService;
 
     @GetMapping("/login")
-    public AccessTokenResponse login(@RequestParam("code") String code) {
-        return kakaoAuthService.requestToken(code);
+    public SingleCommonResponse<AccessTokenResponse> login(@RequestParam("code") String code) {
+        return SingleCommonResponse.ok(kakaoAuthService.requestToken(code));
     }
 }
