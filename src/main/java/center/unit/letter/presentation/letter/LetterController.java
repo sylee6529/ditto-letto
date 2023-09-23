@@ -4,6 +4,7 @@ import center.unit.letter.application.letter.SendLetterService;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.presentation.letter.dto.request.SendLetterRequest;
 import center.unit.letter.presentation.letter.dto.response.SendLetterResponse;
+import center.unit.letter.shared.auth.AuthenticationPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class LetterController {
 
     @PostMapping
     public SendLetterResponse sendLetter(
-            User user,
+            @AuthenticationPrincipal User user,
             @RequestBody @Valid SendLetterRequest request
     ) {
         return sendLetterService.execute(user, request);

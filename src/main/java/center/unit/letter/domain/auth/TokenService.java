@@ -21,8 +21,8 @@ public class TokenService {
     private final JwtProperties jwtProperties;
     private final UserFacade userFacade;
 
-    public String generateAccessToken(String uuid) {
-        return generateToken(uuid, jwtProperties.getAccessExpirationTime());
+    public String generateAccessToken(String phoneNumber) {
+        return generateToken(phoneNumber, jwtProperties.getAccessExpirationTime());
     }
 
     private String generateToken(String phoneNumber, Long time) {
