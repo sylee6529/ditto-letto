@@ -14,6 +14,11 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
+jwt:
+  access-expiration-time: 1296000000 # 15일
+  prefix: Bearer
+  secret-key: ${JWT_SECRET}
 ---
 spring:
   config:
