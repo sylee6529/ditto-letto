@@ -15,6 +15,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import java.time.Duration;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -74,5 +76,18 @@ public class Letter extends BaseTimeEntity {
 
     public void arrive() {
         this.arrived = true;
+    }
+
+    public int getNow() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        if (arrived) {
+            return 7;
+        }
+
+        Duration duration = Duration.between(getCreatedAt(), arriveAt);
+        long slotDuration = duration.toMillis() / 7;
+        Duration elapsedTime = Duration.between(getCreatedAt(), currentTime);
+
+        return (int) (elapsedTime.toMillis() / slotDuration) + 1;
     }
 }

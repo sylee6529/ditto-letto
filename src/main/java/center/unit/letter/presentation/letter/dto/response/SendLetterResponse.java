@@ -1,6 +1,7 @@
 package center.unit.letter.presentation.letter.dto.response;
 
 import center.unit.letter.domain.letter.Letter;
+import center.unit.letter.domain.letter.type.MediumType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +14,12 @@ import java.time.LocalDateTime;
 public class SendLetterResponse {
 
     private LocalDateTime arriveAt;
+    private MediumType mediumType;
+    private int now;
 
     public SendLetterResponse(Letter letter) {
         this.arriveAt = letter.getArriveAt();
+        this.mediumType = letter.getMediumType();
+        this.now = letter.getNow();
     }
 }
