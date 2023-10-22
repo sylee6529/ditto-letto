@@ -1,16 +1,19 @@
 package center.unit.letter.presentation.contact;
 
 import center.unit.letter.application.contact.DeleteContactService;
+import center.unit.letter.application.contact.QueryContactService;
 import center.unit.letter.application.contact.QueryMyContactService;
 import center.unit.letter.application.contact.SaveContactService;
 import center.unit.letter.application.contact.UpdateContactService;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.presentation.contact.dto.request.CreateContactRequest;
 import center.unit.letter.presentation.contact.dto.request.UpdateContactRequest;
+import center.unit.letter.presentation.contact.dto.response.ContactDetailResponse;
 import center.unit.letter.presentation.contact.dto.response.ContactResponse;
 import center.unit.letter.shared.auth.AuthenticationPrincipal;
 import center.unit.letter.shared.response.CommonResponse;
 import center.unit.letter.shared.response.ListCommonResponse;
+import center.unit.letter.shared.response.SingleCommonResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,6 +34,7 @@ public class ContactController {
 
     private final SaveContactService saveContactService;
     private final QueryMyContactService queryMyContactService;
+    private final QueryContactService queryContactService;
     private final UpdateContactService updateContactService;
     private final DeleteContactService deleteContactService;
 
@@ -49,6 +53,16 @@ public class ContactController {
     ) {
         return CommonResponse.ok(
                 queryMyContactService.execute(user)
+        );
+    }
+
+    @GetMapping("/{contact-id}")
+    public SingleCommonResponse<ContactDetailResponse> queryContactDetail(
+            @AuthenticationPrincipal User user,
+            @PathVariable(name = "contact-id") Long id
+    ) {
+        return CommonResponse.ok(
+                queryContactService.execute(user, id)
         );
     }
 
