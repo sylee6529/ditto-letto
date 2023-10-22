@@ -4,9 +4,10 @@ import center.unit.letter.domain.contact.Contact;
 import center.unit.letter.domain.contact.exception.ContactAlreadySavedException;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.infrastructure.persistence.contact.ContactRepository;
-import center.unit.letter.presentation.contact.dto.request.ContactRequest;
+import center.unit.letter.presentation.contact.dto.request.CreateContactRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -14,7 +15,8 @@ public class SaveContactService {
 
     private final ContactRepository contactRepository;
 
-    public void execute(User user, ContactRequest request) {
+    @Transactional
+    public void execute(User user, CreateContactRequest request) {
         validation(user, request.getPhoneNumber());
 
         Contact contact = new Contact(

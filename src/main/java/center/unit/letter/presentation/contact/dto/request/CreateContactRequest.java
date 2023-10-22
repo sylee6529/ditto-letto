@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContactRequest {
+public class CreateContactRequest {
 
     @NotBlank
     private String name;

@@ -2,6 +2,8 @@ package center.unit.letter.domain.contact;
 
 import center.unit.letter.domain.contact.type.Character;
 import center.unit.letter.domain.user.User;
+import center.unit.letter.shared.error.BaseException;
+import center.unit.letter.shared.error.exception.GlobalErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -51,5 +53,11 @@ public class Contact {
     public void update(String name, Character character) {
         this.name = name;
         this.character = character;
+    }
+
+    public void ownerIs(User user) {
+        if (!user.equals(this.user)) {
+            throw new BaseException(GlobalErrorCode.FORBIDDEN);
+        }
     }
 }
