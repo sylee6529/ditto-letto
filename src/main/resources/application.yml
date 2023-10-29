@@ -22,8 +22,10 @@ jwt:
 
 kakao:
   api:
-    client-key: ${KAKAO_API_KEY}
-    redirect-uri: ${KAKAO_REDIRECT_URI}
+    client-key: dk
+    redirect-uri: dk
+#    client-key: ${KAKAO_API_KEY}
+#    redirect-uri: ${KAKAO_REDIRECT_URI}
 ---
 spring:
   config:
