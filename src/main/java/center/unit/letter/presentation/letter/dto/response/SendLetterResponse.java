@@ -15,11 +15,13 @@ public class SendLetterResponse {
 
     private LocalDateTime arriveAt;
     private MediumType mediumType;
-    private int now;
+    private LocalDateTime createdAt;
+    private String imgURL;
 
-    public SendLetterResponse(Letter letter) {
+    public SendLetterResponse(Letter letter, String imgURL) {
         this.arriveAt = letter.getArriveAt();
         this.mediumType = letter.getMediumType();
-        this.now = letter.getNow();
+        this.createdAt = letter.getCreatedAt();
+        this.imgURL = imgURL;
     }
 }
