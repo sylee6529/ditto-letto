@@ -63,6 +63,8 @@ public class SendLetterService {
         // 이벤트 타입인 경우, 이벤트 타입을 검색하여 도착시간과 imgURL을 가져온다
         else {
             Medium eventMedium = mediumRepository.findByName(request.getEventType());
+            eventMedium.adjustEventYear();  // 현재 날짜에 따라 이벤트 연도(올해, 내년)를 조정
+
             mediumType = eventMedium.getName();
             arriveAt = eventMedium.getArriveAt();
             imgUrl = eventMedium.getImgURL();
@@ -89,6 +91,7 @@ public class SendLetterService {
     }
 
     private Medium getMediumTypeByDistance(double distance) {
+        // 거리가 최대 거리 이상이면, 최대 거리로 설정
         if(distance > Medium.DEFAULT_MAX_DISTANCE) {
             distance = Medium.DEFAULT_MAX_DISTANCE;
         }
@@ -98,6 +101,14 @@ public class SendLetterService {
     }
 
     private static double calculateDistanceInKilometer(double startLat, double startLon, double endLat, double endLon){
+        if (startLat > 90 || startLat < -90 || endLat > 180 || endLat < -180) {
+            throw new IllegalArgumentException("위도는 -90 ~ 90 사이, 경도는 -180 ~ 180 사이의 값을 가져야 합니다.");
+        }
+
+        if (startLon == endLon && startLat == endLat) {
+            return 0;
+        }
+
         final int EARTH_RADIUS = 6371; // 지구의 둘레를 360도로 나눈 값
 
         // 각도를 라디안으로 변환
@@ -123,6 +134,11 @@ public class SendLetterService {
 
         // 초단위로 변환
         double timeInSeconds = timeInHours * 3600;
+
+        // 1초 미만은 1초로 변경
+        if (timeInSeconds < 1) {
+            return 1;
+        }
 
         return (int) timeInSeconds;
     }
