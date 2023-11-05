@@ -18,9 +18,6 @@ public class SendLetterRequest {
     @Size(max = 144)
     private String text;
 
-//    @NotNull
-//    private MediumType mediumType;
-
     @NotNull
     private LetterType type;
 
