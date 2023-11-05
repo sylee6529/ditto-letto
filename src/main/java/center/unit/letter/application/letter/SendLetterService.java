@@ -37,15 +37,15 @@ public class SendLetterService {
         LocalDateTime arriveAt;
         String imgUrl;
 
+        // request에 있는 경도, 위도를 소수점 6자리로 포맷팅한다
+        double startLatitude = formatDouble(request.getStartLatitude());
+        double startLongitude = formatDouble(request.getStartLongitude());
+        double endLatitude = formatDouble(request.getEndLatitude());
+        double endLongitude = formatDouble(request.getEndLongitude());
+
         // 일반 타입이면, 거리로 시간을 계산하여 도착시간을 정한다
         if (request.getEventType() == null) {
-            // 경도, 위도로 거리를 계산
-            double distance = calculateDistanceInKilometer(
-                    request.getStartLatitude(),
-                    request.getStartLongitude(),
-                    request.getEndLatitude(),
-                    request.getEndLongitude()
-            );
+            double distance = calculateDistanceInKilometer(startLatitude, startLongitude, endLatitude, endLongitude);
 
             // 거리로 타입을 랜덤으로 설정
             Medium medium = getMediumTypeByDistance(distance);
@@ -100,7 +100,8 @@ public class SendLetterService {
         return mediumList.get(new Random().nextInt(mediumList.size()));
     }
 
-    private static double calculateDistanceInKilometer(double startLat, double startLon, double endLat, double endLon){
+    private static double calculateDistanceInKilometer(double startLat, double startLon, double endLat, double endLon) {
+
         if (startLat > 90 || startLat < -90 || endLat > 180 || endLat < -180) {
             throw new IllegalArgumentException("위도는 -90 ~ 90 사이, 경도는 -180 ~ 180 사이의 값을 가져야 합니다.");
         }
@@ -126,6 +127,7 @@ public class SendLetterService {
     }
 
     public int calculateTravelTime(double distance, double speed) {
+        final int MAX_TIME = 86400; // 24시간
         if (speed == 0) {
             throw new IllegalArgumentException("거리는 0이 될 수 없습니다.");
         }
@@ -139,7 +141,15 @@ public class SendLetterService {
         if (timeInSeconds < 1) {
             return 1;
         }
+        if (timeInSeconds > MAX_TIME) {
+            return MAX_TIME;
+        }
 
         return (int) timeInSeconds;
+    }
+
+    public static double formatDouble(double value) {
+        String format = String.format("%.6f", value);
+        return Double.parseDouble(format);
     }
 }
