@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@Disabled
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest
 class GwiyeoniServiceTest {
 
@@ -38,5 +40,12 @@ class GwiyeoniServiceTest {
         String gwiyeoniText = gwiyeoniService.convertToGwiyeoniText(text);
 
         System.out.println(gwiyeoniText);
+    }
+
+    @Test
+    void 없는단어를넣었을때그대로출력된다() {
+        String text = "없";
+        String gwiyeoniText = gwiyeoniService.convertToGwiyeoniText(text);
+        assertAll(() -> assertEquals(text, gwiyeoniText));
     }
 }
