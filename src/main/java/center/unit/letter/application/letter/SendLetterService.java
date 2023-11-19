@@ -1,5 +1,6 @@
 package center.unit.letter.application.letter;
 
+import center.unit.letter.domain.gwiyeoni.service.GwiyeoniService;
 import center.unit.letter.domain.letter.Letter;
 import center.unit.letter.domain.letter.type.LetterType;
 import center.unit.letter.domain.letter.type.MediumType;
@@ -24,14 +25,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class SendLetterService {
 
-    private final CyworldService cyworldService;
     private final UserFacade userFacade;
     private final LetterRepository letterRepository;
     private final MediumRepository mediumRepository;
+    private final GwiyeoniService gwiyeoniService;
 
     public SendLetterResponse execute(
-        User from,
-        SendLetterRequest request
+            User from,
+            SendLetterRequest request
     ) {
         MediumType mediumType;
         LocalDateTime arriveAt;
@@ -86,8 +87,8 @@ public class SendLetterService {
 
     private String convertText(String text, LetterType type) {
         return type.equals(LetterType.CODE) ?
-            cyworldService.execute(text) :
-            text;
+                gwiyeoniService.convertToGwiyeoniText(text) :
+                text;
     }
 
     private Medium getMediumTypeByDistance(double distance) {
