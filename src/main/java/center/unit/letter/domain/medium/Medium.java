@@ -60,13 +60,13 @@ public class Medium {
         MonthDay nowMonthDay = MonthDay.from(now);
         MonthDay arriveMonthDay = MonthDay.from(arriveAt);
 
-        if (arriveMonthDay.equals(nowMonthDay)) {   // 이벤트 날짜가 오늘인 경우, now 시간으로 설정
-            return now;
-        } else if (arriveMonthDay.isBefore(nowMonthDay)) {  // 이벤트 날짜가 지난 날짜인 경우, 내년으로 설정
+        arriveAt = arriveAt.withYear(now.getYear());
 
-            return LocalDateTime.of(now.getYear() + 1, arriveAt.getMonth(), arriveAt.getDayOfMonth(), arriveAt.getHour(), arriveAt.getMinute());
-        } else {    // 이벤트 날짜가 미래의 날짜인 경우, 이번 년도로 설정
-            return LocalDateTime.of(now.getYear(), arriveAt.getMonth(), arriveAt.getDayOfMonth(), arriveAt.getHour(), arriveAt.getMinute());
+        // 다음 해로 넘어가는 경우 처리
+        if (arriveMonthDay.isBefore(nowMonthDay)) {
+            arriveAt = arriveAt.plusYears(1);
         }
+
+        return arriveAt;
     }
 }
