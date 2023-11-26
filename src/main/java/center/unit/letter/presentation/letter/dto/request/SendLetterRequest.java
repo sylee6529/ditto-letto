@@ -2,6 +2,7 @@ package center.unit.letter.presentation.letter.dto.request;
 
 import center.unit.letter.domain.letter.type.LetterType;
 import center.unit.letter.domain.letter.type.MediumType;
+import center.unit.letter.domain.user.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,19 +23,9 @@ public class SendLetterRequest {
     private LetterType type;
 
     @NotNull
-    private String targetPhoneNumber;
+    private int toUserId;
 
-    private MediumType eventType;
+    private Double longitude;
 
-    @NotBlank
-    private double startLatitude;
-
-    @NotBlank
-    private double startLongitude;
-
-    @NotBlank
-    private double endLatitude;
-
-    @NotBlank
-    private double endLongitude;
+    private Double latitude;
 }

@@ -1,6 +1,7 @@
 package center.unit.letter.domain.user;
 
 import center.unit.letter.shared.entity.BaseTimeEntity;
+import center.unit.letter.shared.util.vo.Location;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,14 +31,31 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private long kakaoUserId;
 
+    private Double longitude;
+
+    private Double latitude;
+
     public User(String name, String phoneNumber, long kakaoUserId) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.kakaoUserId = kakaoUserId;
+        this.longitude = null;
+        this.latitude = null;
     }
 
     public void update(String name, String phoneNumber) {
         this.name = name;
         this.phoneNumber = phoneNumber;
+    }
+
+    public void updateLocation(double longitude, double latitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
+    public Location getLocation() {
+        if(this.longitude == null || this.latitude == null)
+            return null;
+        return new Location(this.latitude, this.longitude);
     }
 }

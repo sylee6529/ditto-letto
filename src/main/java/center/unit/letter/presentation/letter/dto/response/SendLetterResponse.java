@@ -13,15 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SendLetterResponse {
 
-    private LocalDateTime arriveAt;
+    private String arriveAt;
     private MediumType mediumType;
-    private LocalDateTime createdAt;
+    private String createdAt;
     private String imgURL;
-
-    public SendLetterResponse(Letter letter, String imgURL) {
-        this.arriveAt = letter.getArriveAt();
-        this.mediumType = letter.getMediumType();
-        this.createdAt = letter.getCreatedAt();
-        this.imgURL = imgURL;
-    }
 }
