@@ -30,6 +30,8 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private long kakaoUserId;
 
+    private String fcmToken;
+
     public User(String name, String phoneNumber, long kakaoUserId) {
         this.name = name;
         this.phoneNumber = phoneNumber;

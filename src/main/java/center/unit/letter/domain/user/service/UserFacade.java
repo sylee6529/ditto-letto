@@ -15,4 +15,9 @@ public class UserFacade {
         return userRepository.findByPhoneNumber(phoneNumber)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
     }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
+    }
 }

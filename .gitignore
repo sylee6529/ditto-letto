@@ -1,4 +1,5 @@
 .env
+src/main/resources/firebase/ditto-letto-firebase-adminsdk.json
 HELP.md
 .gradle
 build/
