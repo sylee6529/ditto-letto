@@ -1,8 +1,10 @@
 package center.unit.letter.presentation.user;
 
 import center.unit.letter.application.user.QueryUserService;
+import center.unit.letter.application.user.UpdateUserPhoneNumberService;
 import center.unit.letter.application.user.UpdateUserService;
 import center.unit.letter.domain.user.User;
+import center.unit.letter.presentation.user.dto.request.UpdateUserPhoneNumberRequest;
 import center.unit.letter.presentation.user.dto.request.UpdateUserRequest;
 import center.unit.letter.presentation.user.dto.response.UserResponse;
 import center.unit.letter.shared.auth.AuthenticationPrincipal;
@@ -25,6 +27,7 @@ public class UserController {
 
     private final QueryUserService queryUserService;
     private final UpdateUserService updateUserService;
+    private final UpdateUserPhoneNumberService updateUserPhoneNumberService;
 
     @GetMapping
     public SingleCommonResponse<UserResponse> getUser(
@@ -35,6 +38,7 @@ public class UserController {
         );
     }
 
+    // TODO: 12/3/23 UserPhoneNumber 변경을 포함하고 있어서 수 정이 필요할 것 같습니다.
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping
     public void updateUser(
@@ -42,5 +46,14 @@ public class UserController {
             @RequestBody @Valid UpdateUserRequest request
     ) {
         updateUserService.execute(user, request);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/phone-number")
+    public void updatePhoneNumber(
+            @AuthenticationPrincipal User user,
+            @RequestBody @Valid UpdateUserPhoneNumberRequest request
+            ) {
+        updateUserPhoneNumberService.execute(user, request);
     }
 }
