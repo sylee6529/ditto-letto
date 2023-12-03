@@ -50,9 +50,10 @@ public class Contact {
         this.user = user;
     }
 
-    public void update(String name, Character character) {
+    public void update(String name, Character character, String phoneNumber) {
         this.name = name;
         this.character = character;
+        this.phoneNumber = phoneNumber;
     }
 
     public void ownerIs(User user) {

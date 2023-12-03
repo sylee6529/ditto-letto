@@ -21,7 +21,8 @@ public class UpdateContactService {
 
         contact.update(
                 request.getName(),
-                request.getCharacter()
+                request.getCharacter(),
+                request.getPhoneNumber()
         );
     }
 }

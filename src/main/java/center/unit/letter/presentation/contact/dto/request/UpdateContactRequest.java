@@ -18,4 +18,8 @@ public class UpdateContactRequest {
 
     @NotNull
     private Character character;
+
+    @NotBlank
+    @Size(min = 11, max = 11)
+    private String phoneNumber;
 }
