@@ -1,6 +1,7 @@
 package center.unit.letter.presentation.auth;
 
-import center.unit.letter.infrastructure.kakao.KakaoAuthService;
+import center.unit.letter.application.auth.LoginService;
+import center.unit.letter.domain.auth.GrantType;
 import center.unit.letter.presentation.auth.dto.request.KakaoAccessTokenRequest;
 import center.unit.letter.presentation.auth.dto.response.AccessTokenResponse;
 import center.unit.letter.shared.response.SingleCommonResponse;
@@ -17,15 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class KakaoAuthController {
 
-    private final KakaoAuthService kakaoAuthService;
+    private final LoginService loginService;
 
     @GetMapping("/login")
     public SingleCommonResponse<AccessTokenResponse> login(@RequestParam("code") String code) {
-        return SingleCommonResponse.ok(kakaoAuthService.requestToken(code));
+        return SingleCommonResponse.ok(loginService.execute(GrantType.CODE, code));
     }
 
     @PostMapping("/login/token")
     public SingleCommonResponse<AccessTokenResponse> loginByKakaoOAuthToken(@RequestBody KakaoAccessTokenRequest request) {
-        return SingleCommonResponse.ok(kakaoAuthService.requestTokenByKakaoAccessToken(request.kakaoAccessToken()));
+        return SingleCommonResponse.ok(loginService.execute(GrantType.ACCESS_TOKEN, request.kakaoAccessToken()));
     }
 }
