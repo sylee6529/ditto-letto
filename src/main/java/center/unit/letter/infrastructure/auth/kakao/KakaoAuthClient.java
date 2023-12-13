@@ -1,4 +1,4 @@
-package center.unit.letter.infrastructure.kakao;
+package center.unit.letter.infrastructure.auth.kakao;
 
 import center.unit.letter.presentation.auth.dto.response.KakaoAuthTokenResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -11,9 +11,9 @@ public interface KakaoAuthClient {
 
     @PostMapping(value = "/oauth/token", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     KakaoAuthTokenResponse requestAuthToken(
-        @RequestPart(value = "grant_type") String grantType,
-        @RequestPart(value = "client_id") String clientId,
-        @RequestPart(value = "redirect_uri") String redirectUri,
-        @RequestPart(value = "code") String code
+            @RequestPart(value = "grant_type") String grantType,
+            @RequestPart(value = "client_id") String clientId,
+            @RequestPart(value = "redirect_uri") String redirectUri,
+            @RequestPart(value = "code") String code
     );
 }

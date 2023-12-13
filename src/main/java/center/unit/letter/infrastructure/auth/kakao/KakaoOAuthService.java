@@ -1,6 +1,7 @@
-package center.unit.letter.infrastructure.kakao;
+package center.unit.letter.infrastructure.auth.kakao;
 
 import center.unit.letter.domain.user.User;
+import center.unit.letter.infrastructure.auth.OAuthService;
 import center.unit.letter.infrastructure.persistence.user.UserRepository;
 import center.unit.letter.presentation.auth.dto.response.KakaoAuthTokenResponse;
 import center.unit.letter.presentation.auth.dto.response.KakaoUserInfoResponse;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class KakaoAuthService {
+public class KakaoOAuthService implements OAuthService {
 
     private static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
 
@@ -28,13 +29,14 @@ public class KakaoAuthService {
     private String KAKAO_REDIRECT_URI;
 
     @Transactional
-    public User requestTokenByAccessCode(String code) {
+    @Override
+    public User requestJwtByOAuthAccessCode(String accessCode) {
         // KAKAO 토큰 요청
         KakaoAuthTokenResponse kakaoAuthTokenResponse = kakaoAuthClient.requestAuthToken(
                 GRANT_TYPE_AUTHORIZATION_CODE,
                 KAKAO_CLIENT_KEY,
                 KAKAO_REDIRECT_URI,
-                code
+                accessCode
         );
 
         // TODO: 인증 실패 Exception
@@ -42,12 +44,13 @@ public class KakaoAuthService {
             throw new RuntimeException("KAKAO 인증에 실패했습니다.");
         }
 
-        return requestTokenByAccessToken(kakaoAuthTokenResponse.accessToken());
+        return requestJwtByOAuthAccessToken(kakaoAuthTokenResponse.accessToken());
     }
 
+    @Override
     @Transactional
-    public User requestTokenByAccessToken(String kakaoAccessToken) {
-        KakaoUserInfoResponse kakaoUserInfo = getKakaoUserInfo(kakaoAccessToken);
+    public User requestJwtByOAuthAccessToken(String accessToken) {
+        KakaoUserInfoResponse kakaoUserInfo = getKakaoUserInfo(accessToken);
 
         return userRepository.findByKakaoUserId(kakaoUserInfo.id())
                        .orElseThrow(() -> new BaseException(GlobalErrorCode.UNAUTHORIZED));
