@@ -20,10 +20,7 @@ public class LoginService {
     public AccessTokenResponse execute(OAuthType oAuthType, GrantType grantType, String key) {
         OAuthService oAuthService = oAuthFactory.getInstance(oAuthType);
 
-        User user = switch (grantType) {
-            case CODE -> oAuthService.requestJwtByOAuthAccessCode(key);
-            case ACCESS_TOKEN -> oAuthService.requestJwtByOAuthAccessToken(key);
-        };
+        User user = oAuthService.getUserByOAuth(grantType, key);
 
         String accessToken = tokenService.generateAccessToken(user.getPhoneNumber());
 

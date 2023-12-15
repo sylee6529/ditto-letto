@@ -1,5 +1,6 @@
 package center.unit.letter.infrastructure.auth.kakao;
 
+import center.unit.letter.domain.auth.GrantType;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.infrastructure.auth.OAuthService;
 import center.unit.letter.infrastructure.persistence.user.UserRepository;
@@ -28,9 +29,21 @@ public class KakaoOAuthService implements OAuthService {
     @Value("${kakao.api.redirect-uri}")
     private String KAKAO_REDIRECT_URI;
 
-    @Transactional
     @Override
-    public User requestJwtByOAuthAccessCode(String accessCode) {
+    @Transactional(readOnly = true)
+    public User getUserByOAuth(GrantType grantType, String key) {
+        String accessToken = switch (grantType) {
+            case CODE -> getKakaoAccessTokenByCode(key);
+            case ACCESS_TOKEN -> key;
+        };
+
+        KakaoUserInfoResponse kakaoUserInfo = getKakaoUserInfoByAccessToken(accessToken);
+
+        return userRepository.findByKakaoUserId(kakaoUserInfo.id())
+                       .orElseThrow(() -> new BaseException(GlobalErrorCode.UNAUTHORIZED));
+    }
+
+    private String getKakaoAccessTokenByCode(String accessCode) {
         // KAKAO 토큰 요청
         KakaoAuthTokenResponse kakaoAuthTokenResponse = kakaoAuthClient.requestAuthToken(
                 GRANT_TYPE_AUTHORIZATION_CODE,
@@ -39,24 +52,15 @@ public class KakaoOAuthService implements OAuthService {
                 accessCode
         );
 
-        // TODO: 인증 실패 Exception
+        // TODO: 2023/12/15 인증 실패 Exception 추가
         if (kakaoAuthTokenResponse == null) {
             throw new RuntimeException("KAKAO 인증에 실패했습니다.");
         }
 
-        return requestJwtByOAuthAccessToken(kakaoAuthTokenResponse.accessToken());
+        return kakaoAuthTokenResponse.accessToken();
     }
 
-    @Override
-    @Transactional
-    public User requestJwtByOAuthAccessToken(String accessToken) {
-        KakaoUserInfoResponse kakaoUserInfo = getKakaoUserInfo(accessToken);
-
-        return userRepository.findByKakaoUserId(kakaoUserInfo.id())
-                       .orElseThrow(() -> new BaseException(GlobalErrorCode.UNAUTHORIZED));
-    }
-
-    private KakaoUserInfoResponse getKakaoUserInfo(String accessToken) {
+    private KakaoUserInfoResponse getKakaoUserInfoByAccessToken(String accessToken) {
         String bearerToken = "Bearer " + accessToken;
         return kakaoApiClient.requestUserInfo(bearerToken);
     }
