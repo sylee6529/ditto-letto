@@ -7,9 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record KakaoUserInfoResponse(long id, KakaoAccount kakaoAccount) {
 
     @JsonCreator
+
     public KakaoUserInfoResponse(
-        @JsonProperty("id") long id,
-        @JsonProperty("kakao_account") KakaoAccount kakaoAccount) {
+            @JsonProperty("id") long id,
+            @JsonProperty("kakao_account") KakaoAccount kakaoAccount) {
         this.id = id;
         this.kakaoAccount = kakaoAccount;
     }

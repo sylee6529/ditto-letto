@@ -3,7 +3,7 @@ package center.unit.letter.presentation.auth;
 import center.unit.letter.application.auth.LoginService;
 import center.unit.letter.domain.auth.GrantType;
 import center.unit.letter.domain.auth.OAuthType;
-import center.unit.letter.presentation.auth.dto.request.KakaoAccessTokenRequest;
+import center.unit.letter.presentation.auth.dto.request.LoginByOAuthAccessTokenRequest;
 import center.unit.letter.presentation.auth.dto.response.AccessTokenResponse;
 import center.unit.letter.shared.response.SingleCommonResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class KakaoAuthController {
     }
 
     @PostMapping("/login/token")
-    public SingleCommonResponse<AccessTokenResponse> loginByKakaoOAuthToken(@RequestBody KakaoAccessTokenRequest request) {
-        return SingleCommonResponse.ok(loginService.execute(OAuthType.KAKAO, GrantType.ACCESS_TOKEN, request.kakaoAccessToken()));
+    public SingleCommonResponse<AccessTokenResponse> loginByKakaoOAuthToken(@RequestBody LoginByOAuthAccessTokenRequest request) {
+        return SingleCommonResponse.ok(loginService.execute(OAuthType.KAKAO, GrantType.ACCESS_TOKEN, request.accessToken()));
     }
 }
