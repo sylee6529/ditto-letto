@@ -1,6 +1,8 @@
 package center.unit.letter.infrastructure.auth.kakao;
 
+import center.unit.letter.application.auth.dto.OAuthUserInfo;
 import center.unit.letter.domain.auth.GrantType;
+import center.unit.letter.domain.auth.OAuthType;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.infrastructure.auth.OAuthService;
 import center.unit.letter.infrastructure.persistence.user.UserRepository;
@@ -32,13 +34,11 @@ public class KakaoOAuthService implements OAuthService {
     @Override
     @Transactional(readOnly = true)
     public User getUserByOAuth(GrantType grantType, String key) {
-        String accessToken = switch (grantType) {
-            case CODE -> getKakaoAccessTokenByCode(key);
-            case ACCESS_TOKEN -> key;
-        };
+        String accessToken = getAccessToken(grantType, key);
 
         KakaoUserInfoResponse kakaoUserInfo = getKakaoUserInfoByAccessToken(accessToken);
 
+        // TODO: 12/15/23 OAuthType 을 저장하고 두 column 을 기준으로 저장/확인 하도록 변경 필요
         return userRepository.findByKakaoUserId(kakaoUserInfo.id())
                        .orElseThrow(() -> new BaseException(GlobalErrorCode.UNAUTHORIZED));
     }
@@ -63,5 +63,25 @@ public class KakaoOAuthService implements OAuthService {
     private KakaoUserInfoResponse getKakaoUserInfoByAccessToken(String accessToken) {
         String bearerToken = "Bearer " + accessToken;
         return kakaoApiClient.requestUserInfo(bearerToken);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OAuthUserInfo getOAuthUserInfo(GrantType grantType, String key) {
+        String accessToken = getAccessToken(grantType, key);
+
+        KakaoUserInfoResponse kakaoUserInfo = getKakaoUserInfoByAccessToken(accessToken);
+
+        return new OAuthUserInfo(
+                OAuthType.KAKAO,
+                String.valueOf(kakaoUserInfo.id()),
+                kakaoUserInfo.kakaoAccount().profile().nickname());
+    }
+
+    private String getAccessToken(GrantType grantType, String key) {
+        return switch (grantType) {
+            case CODE -> getKakaoAccessTokenByCode(key);
+            case ACCESS_TOKEN -> key;
+        };
     }
 }
