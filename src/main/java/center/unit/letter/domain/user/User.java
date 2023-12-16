@@ -1,8 +1,11 @@
 package center.unit.letter.domain.user;
 
+import center.unit.letter.domain.auth.OAuthType;
 import center.unit.letter.shared.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,12 +31,17 @@ public class User extends BaseTimeEntity {
     private String phoneNumber;
 
     @Column(nullable = false)
-    private long kakaoUserId;
+    private String oAuthId;
 
-    public User(String name, String phoneNumber, long kakaoUserId) {
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OAuthType oAuthType;
+
+    public User(String name, String phoneNumber, OAuthType oAuthType, String oAuthId) {
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.kakaoUserId = kakaoUserId;
+        this.oAuthType = oAuthType;
+        this.oAuthId = oAuthId;
     }
 
     public void update(String name, String phoneNumber) {
