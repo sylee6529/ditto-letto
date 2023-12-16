@@ -1,8 +1,8 @@
 package center.unit.letter.application.auth;
 
 import center.unit.letter.domain.auth.GrantType;
-import center.unit.letter.domain.auth.OAuthType;
 import center.unit.letter.domain.auth.TokenService;
+import center.unit.letter.domain.user.OAuthType;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.infrastructure.auth.OAuthFactory;
 import center.unit.letter.infrastructure.auth.OAuthService;

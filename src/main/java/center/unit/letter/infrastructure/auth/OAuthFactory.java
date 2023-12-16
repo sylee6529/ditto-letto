@@ -1,6 +1,6 @@
 package center.unit.letter.infrastructure.auth;
 
-import center.unit.letter.domain.auth.OAuthType;
+import center.unit.letter.domain.user.OAuthType;
 import center.unit.letter.infrastructure.auth.kakao.KakaoOAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -2,7 +2,7 @@ package center.unit.letter.infrastructure.auth.kakao;
 
 import center.unit.letter.application.auth.dto.OAuthUserInfo;
 import center.unit.letter.domain.auth.GrantType;
-import center.unit.letter.domain.auth.OAuthType;
+import center.unit.letter.domain.user.OAuthType;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.infrastructure.auth.OAuthService;
 import center.unit.letter.infrastructure.persistence.user.UserRepository;
@@ -38,8 +38,7 @@ public class KakaoOAuthService implements OAuthService {
 
         KakaoUserInfoResponse kakaoUserInfo = getKakaoUserInfoByAccessToken(accessToken);
 
-        // TODO: 12/15/23 OAuthType 을 저장하고 두 column 을 기준으로 저장/확인 하도록 변경 필요
-        return userRepository.findByKakaoUserId(kakaoUserInfo.id())
+        return userRepository.findByOauthTypeAndOauthId(OAuthType.KAKAO, kakaoUserInfo.id())
                        .orElseThrow(() -> new BaseException(GlobalErrorCode.UNAUTHORIZED));
     }
 

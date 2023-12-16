@@ -2,7 +2,7 @@ package center.unit.letter.presentation.auth;
 
 import center.unit.letter.application.auth.LoginService;
 import center.unit.letter.domain.auth.GrantType;
-import center.unit.letter.domain.auth.OAuthType;
+import center.unit.letter.domain.user.OAuthType;
 import center.unit.letter.presentation.auth.dto.request.LoginByOAuthAccessTokenRequest;
 import center.unit.letter.presentation.auth.dto.response.AccessTokenResponse;
 import center.unit.letter.shared.response.SingleCommonResponse;

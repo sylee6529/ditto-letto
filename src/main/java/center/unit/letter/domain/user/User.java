@@ -1,6 +1,5 @@
 package center.unit.letter.domain.user;
 
-import center.unit.letter.domain.auth.OAuthType;
 import center.unit.letter.shared.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,18 +29,18 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
-    @Column(nullable = false)
-    private String oAuthId;
+    @Column(nullable = false, name = "oauth_id")
+    private String oauthId;
 
+    @Column(nullable = false, name = "oauth_type")
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private OAuthType oAuthType;
+    private OAuthType oauthType;
 
-    public User(String name, String phoneNumber, OAuthType oAuthType, String oAuthId) {
+    public User(String name, String phoneNumber, OAuthType oauthType, String oauthId) {
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.oAuthType = oAuthType;
-        this.oAuthId = oAuthId;
+        this.oauthType = oauthType;
+        this.oauthId = oauthId;
     }
 
     public void update(String name, String phoneNumber) {

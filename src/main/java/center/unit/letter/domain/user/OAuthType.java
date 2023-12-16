@@ -1,4 +1,4 @@
-package center.unit.letter.domain.auth;
+package center.unit.letter.domain.user;
 
 public enum OAuthType {
     KAKAO,

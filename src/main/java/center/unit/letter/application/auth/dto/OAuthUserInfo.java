@@ -1,6 +1,6 @@
 package center.unit.letter.application.auth.dto;
 
-import center.unit.letter.domain.auth.OAuthType;
+import center.unit.letter.domain.user.OAuthType;
 import lombok.Value;
 
 @Value
