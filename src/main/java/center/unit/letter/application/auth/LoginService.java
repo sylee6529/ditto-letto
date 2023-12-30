@@ -24,6 +24,6 @@ public class LoginService {
 
         String accessToken = tokenService.generateAccessToken(user.getPhoneNumber());
 
-        return new AccessTokenResponse(accessToken);
+        return new AccessTokenResponse(oAuthType, accessToken);
     }
 }
