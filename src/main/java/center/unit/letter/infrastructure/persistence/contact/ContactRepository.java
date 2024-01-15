@@ -11,4 +11,6 @@ public interface ContactRepository extends CrudRepository<Contact, Long> {
     boolean existsByUserAndPhoneNumber(User user, String phoneNumber);
 
     List<Contact> findByUser(User user);
+
+    Contact findByUserAndPhoneNumber(User user, String phoneNumber);
 }
