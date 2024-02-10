@@ -21,16 +21,14 @@ jwt:
   secret-key: ${JWT_SECRET}
 
 kakao:
-  api:
-    client-key: ${KAKAO_API_KEY}
-    redirect-uri: ${KAKAO_REDIRECT_URI}
+  client-key: ${KAKAO_API_KEY}
+  redirect-uri: ${KAKAO_REDIRECT_URI}
 
 apple:
-  api:
-    client-id: ${APPLE_API_CLIENT_ID}
-    client-secret: ${APPLE_API_CLIENT_SECRET}
-    redirect-uri: ${APPLE_API_REDIRECT_URI}
-    team-id: ${APPLE_API_TEAM_ID}
+  client-id: ${APPLE_API_CLIENT_ID}
+  client-secret: ${APPLE_API_CLIENT_SECRET}
+  redirect-uri: ${APPLE_API_REDIRECT_URI}
+  team-id: ${APPLE_API_TEAM_ID}
 ---
 spring:
   config:

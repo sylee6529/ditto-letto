@@ -8,6 +8,7 @@ import center.unit.letter.infrastructure.auth.OAuthService;
 import center.unit.letter.infrastructure.auth.apple.dto.AppleAuthKeysResponseDTO;
 import center.unit.letter.infrastructure.auth.apple.dto.AppleTokenResponseDTO;
 import center.unit.letter.infrastructure.persistence.user.UserRepository;
+import center.unit.letter.shared.config.properties.AppleProperties;
 import center.unit.letter.shared.error.BaseException;
 import center.unit.letter.shared.error.exception.GlobalErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +32,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.Charsets;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -42,15 +42,7 @@ public class AppleOAuthService implements OAuthService {
     private final AppleAuthClient appleAuthClient;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
-
-    @Value("${apple.api.redirect-uri}")
-    private String REDIRECT_URI;
-    @Value("${apple.api.client-id}")
-    private String CLIENT_ID;
-    @Value("${apple.api.client-secret}")
-    private String CLIENT_SECRET;
-    @Value("${apple.api.team-id}")
-    private String TEAM_ID;
+    private final AppleProperties properties;
 
     /*
     GrantType.ACCESS_TOKEN 은 모바일을 통해서 들어오고 이가 ID TOKEN 이라고 가정함!
@@ -74,8 +66,8 @@ public class AppleOAuthService implements OAuthService {
 
         AppleTokenResponseDTO tokenResponse = appleAuthClient.requestIdToken(
                 "authorization_code",
-                REDIRECT_URI,
-                CLIENT_ID,
+                properties.getRedirectUri(),
+                properties.getClientId(),
                 clientSecretToken,
                 code
         );
@@ -94,16 +86,16 @@ public class AppleOAuthService implements OAuthService {
         // JWT 생성
         return Jwts.builder()
                        .header()
-                       .keyId(CLIENT_SECRET)
+                       .keyId(properties.getClientSecret())
                        .setAlgorithm(SignatureAlgorithm.ES256.toString())
                        .and()
-                       .issuer(TEAM_ID)
+                       .issuer(properties.getTeamId())
                        .issuedAt(now)
                        .expiration(expiration)
                        .audience()
                        .add("https://appleid.apple.com")
                        .and()
-                       .subject(CLIENT_ID)
+                       .subject(properties.getClientId())
                        .signWith(privateKey)
                        .compact();
     }
