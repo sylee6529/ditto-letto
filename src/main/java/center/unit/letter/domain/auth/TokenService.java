@@ -25,16 +25,18 @@ public class TokenService {
     }
 
     private String generateToken(String phoneNumber, Long time) {
-        Claims claims = Jwts.claims();
-        claims.put("phone-number", phoneNumber);
+        Claims claims = Jwts
+                                .claims()
+                                .add("phone-number", phoneNumber)
+                                .build();
         Date now = new Date();
 
         return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(now)
-            .setExpiration(new Date(now.getTime() + time))
-            .signWith(getSigningKey(jwtProperties.getSecretKey()), SignatureAlgorithm.HS256)
-            .compact();
+                       .setClaims(claims)
+                       .setIssuedAt(now)
+                       .setExpiration(new Date(now.getTime() + time))
+                       .signWith(getSigningKey(jwtProperties.getSecretKey()), SignatureAlgorithm.HS256)
+                       .compact();
     }
 
     public User getUser(String token) {
@@ -47,11 +49,11 @@ public class TokenService {
 
     private Claims extractAllClaims(String token) {
         try {
-            return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey(jwtProperties.getSecretKey()))
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+            return Jwts.parser()
+                           .setSigningKey(getSigningKey(jwtProperties.getSecretKey()))
+                           .build()
+                           .parseClaimsJws(token)
+                           .getBody();
         } catch (Exception e) {
             throw new IllegalArgumentException();
         }
