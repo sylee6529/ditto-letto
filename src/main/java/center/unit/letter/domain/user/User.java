@@ -42,4 +42,8 @@ public class User extends BaseTimeEntity {
         this.name = name;
         this.phoneNumber = phoneNumber;
     }
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
 }
