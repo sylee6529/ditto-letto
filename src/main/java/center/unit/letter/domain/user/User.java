@@ -32,6 +32,8 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, name = "oauth_id")
     private String oauthId;
 
+    private String fcmToken;
+
     @Column(nullable = false, name = "oauth_type")
     @Enumerated(EnumType.STRING)
     private OAuthType oauthType;
@@ -46,6 +48,10 @@ public class User extends BaseTimeEntity {
     public void update(String name, String phoneNumber) {
         this.name = name;
         this.phoneNumber = phoneNumber;
+    }
+
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 
     public void updatePhoneNumber(String phoneNumber) {
