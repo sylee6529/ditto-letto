@@ -18,17 +18,16 @@ public class QueryMediumService {
 
         private final MediumRepository mediumRepository;
 
-        public Medium execute(String name) {
-                return mediumRepository.findByName(MediumType.valueOf(name))
+        public Medium execute(MediumType name) {
+                return mediumRepository.findByName(name)
                         .orElseThrow(() -> new MediumException(MediumErrorCode.INVALID_MEDIUM_NAME));
         }
 
         @Transactional
         public Medium getMediumByDistance(double distance) {
                 // 거리가 최대 거리 이상이면, 최대 거리로 설정
-                if(distance > Medium.DEFAULT_MAX_DISTANCE) {
-                        distance = Medium.DEFAULT_MAX_DISTANCE;
-                }
+                distance = Math.min(distance, Medium.DEFAULT_MAX_DISTANCE);
+
 
                 // 이벤트 타입까지 포함하여 타입을 결정
                 List<Medium> mediumList = mediumRepository.findAllByDistance(distance)
