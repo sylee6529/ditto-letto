@@ -20,34 +20,24 @@ public class FCMNotificationService {
     private final FirebaseMessaging firebaseMessaging;
     private final UserFacade userFacade;
 
-    public String sendNotification(FCMNotificationRequest request) {
-        Optional<User> user = Optional
-                .ofNullable(userFacade.getUserById(request.getTargetUserId()));
+    public void sendNotification(FCMNotificationRequest request) {
+        User user = userFacade.getUserById(request.getTargetUserId());
 
-        if(user.isPresent()) {
-            if(user.get().getFcmToken() != null) {
+        try {
+            if(user != null && user.getFcmToken() != null) {
                 Notification notification = Notification.builder()
                         .setTitle(request.getTitle())
                         .setBody(request.getBody())
                         .build();
                 Message message = Message.builder()
                         .setNotification(notification)
-                        .setToken(user.get().getFcmToken())
+                        .setToken(user.getFcmToken())
                         .build();
-                try {
-                    firebaseMessaging.send(message);
-                    return "알림을 성공적으로 전송했습니다. targetUserId: " + request.getTargetUserId() + ", title: " + request.getTitle() + ", body: " + request.getBody();
-                } catch (FirebaseMessagingException e) {
-                    e.printStackTrace();
-                    return "알림 전송에 실패했습니다.";
-                }
+
+                firebaseMessaging.send(message);
             }
-            else {
-                return "유저의 fcmToken이 존재하지 않습니다. targetUserId: " + request.getTargetUserId();
-            }
-        }
-        else {
-            return "유저가 존재하지 않습니다. targetUserId: " + request.getTargetUserId();
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException("알림 전송에 실패했습니다.");
         }
     }
 }
