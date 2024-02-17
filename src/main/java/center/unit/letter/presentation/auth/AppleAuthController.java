@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/auth/kakao")
+@RequestMapping("/auth/apple")
 @RestController
-public class KakaoAuthController {
+public class AppleAuthController {
 
     private final LoginService loginService;
     private final SignUpService signUpService;
@@ -31,7 +31,7 @@ public class KakaoAuthController {
     @PostMapping("/sign-up")
     public SingleCommonResponse<SignUpResponse> signUp(@RequestBody @Valid SignUpRequest request) {
         User user = signUpService.execute(
-                OAuthType.KAKAO,
+                OAuthType.APPLE,
                 request.getGrantType(),
                 request.getKey(),
                 request.getPhoneNumber()
@@ -42,11 +42,11 @@ public class KakaoAuthController {
 
     @GetMapping("/login")
     public SingleCommonResponse<AccessTokenResponse> login(@RequestParam("code") String code) {
-        return SingleCommonResponse.ok(loginService.execute(OAuthType.KAKAO, GrantType.CODE, code));
+        return SingleCommonResponse.ok(loginService.execute(OAuthType.APPLE, GrantType.CODE, code));
     }
 
     @PostMapping("/login/token")
     public SingleCommonResponse<AccessTokenResponse> loginByKakaoOAuthToken(@RequestBody LoginByOAuthAccessTokenRequest request) {
-        return SingleCommonResponse.ok(loginService.execute(OAuthType.KAKAO, GrantType.ACCESS_TOKEN, request.accessToken()));
+        return SingleCommonResponse.ok(loginService.execute(OAuthType.APPLE, GrantType.ACCESS_TOKEN, request.accessToken()));
     }
 }
