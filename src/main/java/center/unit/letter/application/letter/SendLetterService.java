@@ -17,6 +17,7 @@ import center.unit.letter.presentation.letter.dto.response.SendLetterResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 import center.unit.letter.presentation.user.dto.request.UpdateUserLocationRequest;
 import center.unit.letter.shared.util.vo.Location;
@@ -40,53 +41,30 @@ public class SendLetterService {
             SendLetterRequest request
     ) {
         User toUser = userFacade.getUserById(request.getToUserId());
-        validate(request, toUser, fromUser.getLocation(), toUser.getLocation(), fromUser);
 
-        Optional<Location> fromLocation = Optional.ofNullable(fromUser.getLocation());
-        Optional<Location> toLocation = Optional.ofNullable(toUser.getLocation());
+        validate(request, toUser, fromUser);
+
+        Location fromLocation = fromUser.getLocation();
+        Location toLocation = toUser.getLocation();
 
         // 위치를 계산하여 탈 것을 랜덤으로 배정
-        double distance;
-        if (fromLocation.isPresent() && toLocation.isPresent()) {
-            distance = fromLocation.get().getDistanceFrom(toLocation.get());
-        }
-        else {
-            throw new LetterException(LetterErrorCode.INVALID_LOCATION);
-        }
+        double distance = fromLocation.getDistanceFrom(toLocation);
 
         Medium medium = queryMediumService.getMediumByDistance(distance);
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        Letter letter;
-        // 이벤트 타입인 경우, 이벤트 날짜를 적용하여 저장
-        if (medium.isEvent()) {
-            letter = letterRepository.save(
-                    new Letter(
-                            convertText(request.getText(), request.getType()),
-                            medium.getName(),
-                            request.getType(),
-                            userFacade.getUserById(request.getToUserId()),
-                            fromUser,
-                            medium.getArrivedAt()
-                    )
-            );
-        }
+        LocalDateTime arrivedAt = medium.isEvent() ? medium.getArrivedAt() : LocalDateTime.now().plusSeconds(medium.calculateTravelTime(distance));
 
-        // 일반 타입이면, 거리와 정해진 탈 것의 시속으로 도착 날짜를 적용하여 저장
-        else {
-            letter = letterRepository.save(
-                    new Letter(
-                            convertText(request.getText(), request.getType()),
-                            medium.getName(),
-                            request.getType(),
-                            userFacade.getUserById(request.getToUserId()),
-                            fromUser,
-                            LocalDateTime.now().plusSeconds(
-                                    medium.calculateTravelTime(distance)
-                            )
-                    )
-            );
-        }
+        Letter letter = letterRepository.save(
+                new Letter(
+                        convertText(request.getText(), request.getType()),
+                        medium.getName(),
+                        request.getType(),
+                        toUser,
+                        fromUser,
+                        arrivedAt
+                )
+        );
 
         return new SendLetterResponse(
                 letter.getArriveAt().format(dateTimeFormatter),
@@ -105,12 +83,10 @@ public class SendLetterService {
     private void validate(
             SendLetterRequest request,
             User toUser,
-            Location fromLocation,
-            Location toLocation,
             User fromUser
     ) {
-        Optional<Location> fromLocationOptional = Optional.ofNullable(fromLocation);
-        Optional<Location> toLocationOptional = Optional.ofNullable(toLocation);
+        Optional<Location> fromLocation = Optional.ofNullable(fromUser.getLocation());
+        Optional<Location> toLocation = Optional.ofNullable(toUser.getLocation());
 
         // request에 위치 정보 && toUser의 위치 정보가 있으면, fromUser의 위치 정보를 갱신
         if(request.getLatitude() != null && request.getLongitude() != null) {
@@ -123,8 +99,8 @@ public class SendLetterService {
 
         // request에 위치 정보가 없고 fromUser와 toUser의 위치 정보가 없으면, 에러
         else {
-            fromLocationOptional.orElseThrow(() -> new LetterException(LetterErrorCode.FROM_LOCATION_NOT_FOUND));
-            toLocationOptional.orElseThrow(() -> new LetterException(LetterErrorCode.TO_LOCATION_NOT_FOUND));
+            fromLocation.orElseThrow(() -> new LetterException(LetterErrorCode.FROM_LOCATION_NOT_FOUND));
+            toLocation.orElseThrow(() -> new LetterException(LetterErrorCode.TO_LOCATION_NOT_FOUND));
         }
     }
 }
