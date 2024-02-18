@@ -19,7 +19,7 @@ public class SignUpService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User execute(OAuthType oAuthType, GrantType grantType, String oauthKey, String phoneNumber) {
+    public User execute(OAuthType oAuthType, GrantType grantType, String oauthKey, String phoneNumber, double longitude, double latitude) {
         OAuthService oAuthService = oAuthFactory.getInstance(oAuthType);
 
         OAuthUserInfo oAuthUserInfo = oAuthService.getOAuthUserInfo(grantType, oauthKey);
@@ -27,7 +27,9 @@ public class SignUpService {
                 oAuthUserInfo.getName(),
                 phoneNumber,
                 oAuthType,
-                oAuthUserInfo.getOauthId()
+                oAuthUserInfo.getOauthId(),
+                longitude,
+                latitude
         );
 
         return userRepository.save(user);

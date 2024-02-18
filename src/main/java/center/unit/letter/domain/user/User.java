@@ -39,11 +39,13 @@ public class User extends BaseTimeEntity {
 
     private Double latitude;
 
-    public User(String name, String phoneNumber, long kakaoUserId) {
+    public User(String name, String phoneNumber, OAuthType oauthType, String oauthId, double longitude, double latitude) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.oauthType = oauthType;
         this.oauthId = oauthId;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public void update(String name, String phoneNumber) {

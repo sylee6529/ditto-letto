@@ -34,7 +34,9 @@ public class AppleAuthController {
                 OAuthType.APPLE,
                 request.getGrantType(),
                 request.getKey(),
-                request.getPhoneNumber()
+                request.getPhoneNumber(),
+                request.getLongitude(),
+                request.getLatitude()
         );
 
         return CommonResponse.ok(SignUpResponse.of(user));
