@@ -34,36 +34,18 @@ public class QueryMyLetterService {
         letters.forEach(letter -> {
             String phoneNumber = isSendingLetter ? letter.getTo().getPhoneNumber() : letter.getFrom().getPhoneNumber();
             boolean isContact = contactRepository.existsByUserAndPhoneNumber(user, phoneNumber);
-            MyLetterType myLetterType = determineLetterType(isContact, letter.isArrived(), isSendingLetter);
+            MyLetterType myLetterType = MyLetterType.determineLetterType(isContact, letter.isArrived(), isSendingLetter);
 
             String previewText = null;
-            if(myLetterType.equals(MyLetterType.waiting)) {
+            if(myLetterType.equals(MyLetterType.WAITING)) {
                 previewText = getPreviewText(letter.getText());
             }
             Contact contact = contactRepository.findByUserAndPhoneNumber(user, phoneNumber);
-            myLetterListResponse.addMyLetter(new MyLetterDto(myLetterType, letter.getMediumType(), letter.getCreatedAt(), letter.getArriveAt(), contact, previewText));
+            myLetterListResponse.addMyLetter(new MyLetterDto(myLetterType.getName(), letter.getMediumType(), letter.getCreatedAt(), letter.getArriveAt(), contact, previewText));
         });
     }
 
     private String getPreviewText(String text) {
         return text.length() > MAX_PREVIEW_TEXT_LENGTH ? text.substring(0, MAX_PREVIEW_TEXT_LENGTH) : text;
-    }
-
-    private MyLetterType determineLetterType(boolean isInContact, boolean arrived, boolean isSendingLetter) {
-        // 편지가 도착했다면, 친구 유무에 따라 구분
-        if(arrived) {
-            return isInContact ? MyLetterType.friend : MyLetterType.strange;
-        }
-
-        // 도착하지 않은 오고 있는 편지는 모두 waiting
-        if (!isSendingLetter) {
-            return MyLetterType.waiting;
-        }
-
-        // 도착하지 않은 보내는 편지는 친구 유무에 따라 구분
-        if(isSendingLetter) {
-            return isInContact ? MyLetterType.sendingFriend : MyLetterType.sendingStranger;
-        }
-        return null;
     }
 }
