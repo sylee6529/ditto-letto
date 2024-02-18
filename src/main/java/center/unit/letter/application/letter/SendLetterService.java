@@ -40,7 +40,7 @@ public class SendLetterService {
             User fromUser,
             SendLetterRequest request
     ) {
-        User toUser = userFacade.getUserById(request.getToUserId());
+        User toUser = userFacade.getUser(request.getToPhoneNumber());
 
         validate(request, toUser, fromUser);
 

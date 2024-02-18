@@ -23,7 +23,7 @@ public class SendLetterRequest {
     private LetterType type;
 
     @NotNull
-    private int toUserId;
+    private String toPhoneNumber;
 
     private Double longitude;
 
