@@ -2,8 +2,7 @@ package center.unit.letter.infrastructure.persistence.letter;
 
 import center.unit.letter.domain.letter.Letter;
 import center.unit.letter.domain.user.User;
-import center.unit.letter.presentation.letter.dto.response.MyLetterResponse;
-import feign.Param;
+
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -19,17 +18,7 @@ public interface LetterRepository extends CrudRepository<Letter, Long> {
     @Query("SELECT l FROM Letter l WHERE l.arrived = false")
     List<Letter> findAllOfNotArrived();
 
-    @Query(nativeQuery = true, value="SELECT u.phone_number AS phone_number, l.type, l.medium_type, " +
-            "    CASE WHEN l.arrive_at <= NOW() THEN 7 " +
-            "        ELSE ROUND(EXTRACT(EPOCH FROM (NOW() - l.created_at)) / EXTRACT(EPOCH FROM (l.arrive_at - l.created_at)) * 7) " +
-            "    END AS progress_level, " +
-            "    SUBSTRING(l.text FROM 1 FOR 25) AS preview_text, " +
-            "    CASE WHEN l.from_id = :userId THEN 'OUT' " +
-            "        WHEN l.to_id = :userId THEN 'IN' " +
-            "        ELSE NULL " +
-            "    END AS direction, l.arrived " +
-            "FROM tbl_letter l " +
-            "JOIN tbl_user u ON u.id = l.from_id " +
-            "WHERE l.from_id = :userId OR l.to_id = :userId ORDER BY l.arrive_at DESC")
-    List<Object[]> findAllByUserId(@Param("userId") Long userId);
+    List<Letter> findAllByTo(User user);
+
+    List<Letter> findAllByFrom(User user);
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum MediumType {
     // Event Type
     RUDOLPH,
+    MAGPIE,
 
     // Normal Type
     WALK,
@@ -17,5 +18,5 @@ public enum MediumType {
     CAR,
     AIRPLANE,
     DINOSAUR,
-    TRAIN,
+    TRAIN;
 }

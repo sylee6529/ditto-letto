@@ -1,55 +1,52 @@
 package center.unit.letter.application.letter;
 
-import center.unit.letter.domain.letter.type.DirectionType;
-import center.unit.letter.domain.letter.type.LetterType;
-import center.unit.letter.domain.letter.type.MediumType;
+import center.unit.letter.application.contact.QueryMyContactService;
+import center.unit.letter.domain.contact.Contact;
+import center.unit.letter.domain.letter.Letter;
+import center.unit.letter.domain.letter.type.MyLetterType;
 import center.unit.letter.domain.user.User;
+import center.unit.letter.infrastructure.persistence.contact.ContactRepository;
 import center.unit.letter.infrastructure.persistence.letter.LetterRepository;
+import center.unit.letter.presentation.letter.dto.MyLetterVO;
 import center.unit.letter.presentation.letter.dto.response.MyLetterListResponse;
-import center.unit.letter.presentation.letter.dto.response.MyLetterResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class QueryMyLetterService {
+    private final static int MAX_PREVIEW_TEXT_LENGTH = 25;
     private final LetterRepository letterRepository;
-
+    private final ContactRepository contactRepository;
 
     public MyLetterListResponse execute(User user) {
-        List<Object[]> results = letterRepository.findAllByUserId(user.getId());
+        List<MyLetterVO> myLetters = new ArrayList<>();
+        processLetters(user, myLetters, letterRepository.findAllByTo(user), false);
+        processLetters(user, myLetters, letterRepository.findAllByFrom(user), true);
 
-        List<MyLetterResponse> inBoxLetters = new ArrayList<>();
-        List<MyLetterResponse> outBoxLetters = new ArrayList<>();
+        return new MyLetterListResponse(myLetters);
+    }
 
-        for (Object[] result: results) {
-            String phoneNumber = (String) result[0];
-            String rawLetterType = (String) result[1];
-            String rawMediumType = (String) result[2];
-            int progressLevel = ((BigDecimal) result[3]).intValue();
-            String previewText = (String) result[4];
-            String rawDirectionType = (String) result[5];
-            boolean arrived = (boolean) result[6];
+    private void processLetters(User user, List<MyLetterVO> myLetters, List<Letter> letters, boolean isSendingLetter) {
+        letters.forEach(letter -> {
+            String phoneNumber = isSendingLetter ? letter.getTo().getPhoneNumber() : letter.getFrom().getPhoneNumber();
+            boolean isContact = contactRepository.existsByUserAndPhoneNumber(user, phoneNumber);
+            MyLetterType myLetterType = MyLetterType.determineLetterType(isContact, letter.isArrived(), isSendingLetter);
 
-            DirectionType directionType = DirectionType.valueOf(rawDirectionType);
-            LetterType letterType = LetterType.valueOf(rawLetterType);
-            MediumType mediumType = MediumType.valueOf(rawMediumType);
-
-            MyLetterResponse myLetter = new MyLetterResponse(phoneNumber, mediumType, letterType, progressLevel, previewText, directionType, arrived);
-
-            if(directionType.equals(DirectionType.OUT)) {
-                outBoxLetters.add(myLetter);
+            String previewText = null;
+            if(myLetterType.equals(MyLetterType.WAITING)) {
+                previewText = getPreviewText(letter.getText());
             }
-            else {
-                inBoxLetters.add(myLetter);
-            }
-        }
+            Contact contact = contactRepository.findByUserAndPhoneNumber(user, phoneNumber);
+            myLetters.add(new MyLetterVO(myLetterType.getName(), letter.getMediumType(), letter.getCreatedAt(), letter.getArriveAt(), contact, previewText));
+        });
+    }
 
-        return new MyLetterListResponse(inBoxLetters, outBoxLetters);
-
+    private String getPreviewText(String text) {
+        return text.length() > MAX_PREVIEW_TEXT_LENGTH ? text.substring(0, MAX_PREVIEW_TEXT_LENGTH) : text;
     }
 }
