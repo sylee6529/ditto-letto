@@ -7,11 +7,12 @@ import center.unit.letter.domain.letter.type.MyLetterType;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.infrastructure.persistence.contact.ContactRepository;
 import center.unit.letter.infrastructure.persistence.letter.LetterRepository;
-import center.unit.letter.presentation.letter.dto.MyLetterDto;
+import center.unit.letter.presentation.letter.dto.MyLetterVO;
 import center.unit.letter.presentation.letter.dto.response.MyLetterListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,14 +24,14 @@ public class QueryMyLetterService {
     private final ContactRepository contactRepository;
 
     public MyLetterListResponse execute(User user) {
-        MyLetterListResponse myLetterListResponse = new MyLetterListResponse();
-        processLetters(user, myLetterListResponse, letterRepository.findAllByTo(user), false);
-        processLetters(user, myLetterListResponse, letterRepository.findAllByFrom(user), true);
+        List<MyLetterVO> myLetters = new ArrayList<>();
+        processLetters(user, myLetters, letterRepository.findAllByTo(user), false);
+        processLetters(user, myLetters, letterRepository.findAllByFrom(user), true);
 
-        return myLetterListResponse;
+        return new MyLetterListResponse(myLetters);
     }
 
-    private void processLetters(User user, MyLetterListResponse myLetterListResponse, List<Letter> letters, boolean isSendingLetter) {
+    private void processLetters(User user, List<MyLetterVO> myLetters, List<Letter> letters, boolean isSendingLetter) {
         letters.forEach(letter -> {
             String phoneNumber = isSendingLetter ? letter.getTo().getPhoneNumber() : letter.getFrom().getPhoneNumber();
             boolean isContact = contactRepository.existsByUserAndPhoneNumber(user, phoneNumber);
@@ -41,7 +42,7 @@ public class QueryMyLetterService {
                 previewText = getPreviewText(letter.getText());
             }
             Contact contact = contactRepository.findByUserAndPhoneNumber(user, phoneNumber);
-            myLetterListResponse.addMyLetter(new MyLetterDto(myLetterType.getName(), letter.getMediumType(), letter.getCreatedAt(), letter.getArriveAt(), contact, previewText));
+            myLetters.add(new MyLetterVO(myLetterType.getName(), letter.getMediumType(), letter.getCreatedAt(), letter.getArriveAt(), contact, previewText));
         });
     }
 
