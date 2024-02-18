@@ -36,7 +36,7 @@ public class Contact {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "feel")
     private Character character;
 
     @ManyToOne(fetch = FetchType.LAZY)

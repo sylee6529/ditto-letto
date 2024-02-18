@@ -1,9 +1,10 @@
 .env
+**/src/main/resources/firebase/ditto-letto-firebase-adminsdk.json
 HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
+!/src/main/**/build/
 !**/src/test/**/build/
 
 ### STS ###
@@ -36,3 +37,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Resource ###
+/src/main/resources/*.p8
+/src/main/resources/*.yml
