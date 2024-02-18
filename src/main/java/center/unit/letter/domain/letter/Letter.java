@@ -58,11 +58,11 @@ public class Letter extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User from;
 
-    public Letter(String text, MediumType mediumType, LetterType type, User to, User from) {
+    public Letter(String text, MediumType mediumType, LetterType type, User to, User from, LocalDateTime arriveAt) {
         this.text = text;
         this.mediumType = mediumType;
         this.type = type;
-        this.arriveAt = LocalDateTime.now().plusSeconds(mediumType.getSpeed());
+        this.arriveAt = arriveAt;
         this.to = to;
         this.from = from;
         this.arrived = false;

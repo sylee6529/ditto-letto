@@ -16,7 +16,7 @@ public class UserFacade {
                 .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
     }

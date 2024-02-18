@@ -1,15 +1,12 @@
 package center.unit.letter.domain.user;
 
 import center.unit.letter.shared.entity.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import center.unit.letter.shared.util.vo.Location;
+import center.unit.letter.shared.util.vo.Location;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,11 +35,17 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private OAuthType oauthType;
 
-    public User(String name, String phoneNumber, OAuthType oauthType, String oauthId) {
+    private Double longitude;
+
+    private Double latitude;
+
+    public User(String name, String phoneNumber, OAuthType oauthType, String oauthId, double longitude, double latitude) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.oauthType = oauthType;
         this.oauthId = oauthId;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     public void update(String name, String phoneNumber) {
@@ -56,5 +59,16 @@ public class User extends BaseTimeEntity {
 
     public void updatePhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void updateLocation(double longitude, double latitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
+    public Location getLocation() {
+        if(this.longitude == null || this.latitude == null)
+            return null;
+        return new Location(this.latitude, this.longitude);
     }
 }
