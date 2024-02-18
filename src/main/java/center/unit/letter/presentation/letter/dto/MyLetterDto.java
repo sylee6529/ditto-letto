@@ -14,14 +14,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MyLetterDto {
-    private MyLetterType myLetterType;
+    private String myLetterType;
     private MediumType mediumType;
     private LocalDateTime createdAt;
     private LocalDateTime arriveAt;
     private ContactDto contact;
     private String previewText;
 
-    public MyLetterDto(MyLetterType myLetterType, MediumType mediumType, LocalDateTime createdAt, LocalDateTime arriveAt, Contact contact, String previewText) {
+    public MyLetterDto(String myLetterType, MediumType mediumType, LocalDateTime createdAt, LocalDateTime arriveAt, Contact contact, String previewText) {
         this.myLetterType = myLetterType;
         this.mediumType = mediumType;
         this.createdAt = createdAt;
