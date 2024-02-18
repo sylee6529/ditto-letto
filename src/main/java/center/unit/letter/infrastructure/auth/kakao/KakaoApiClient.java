@@ -1,4 +1,4 @@
-package center.unit.letter.infrastructure.kakao;
+package center.unit.letter.infrastructure.auth.kakao;
 
 import center.unit.letter.presentation.auth.dto.response.KakaoUserInfoResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface KakaoApiClient {
 
     @PostMapping(
-        value = "/v2/user/me",
-        consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            value = "/v2/user/me",
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     KakaoUserInfoResponse requestUserInfo(@RequestHeader("Authorization") String bearerToken);
 }

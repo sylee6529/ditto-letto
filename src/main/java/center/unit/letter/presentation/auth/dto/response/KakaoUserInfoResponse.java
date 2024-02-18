@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 // TODO: 카카오 유저 정보가 필요하다면 추가하여 가져올 것
-public record KakaoUserInfoResponse(long id, KakaoAccount kakaoAccount) {
+public record KakaoUserInfoResponse(String id, KakaoAccount kakaoAccount) {
 
     @JsonCreator
+
     public KakaoUserInfoResponse(
-        @JsonProperty("id") long id,
-        @JsonProperty("kakao_account") KakaoAccount kakaoAccount) {
+            @JsonProperty("id") String id,
+            @JsonProperty("kakao_account") KakaoAccount kakaoAccount) {
         this.id = id;
         this.kakaoAccount = kakaoAccount;
     }
