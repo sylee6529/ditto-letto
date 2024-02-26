@@ -42,4 +42,5 @@ out/
 /src/main/resources/*.p8
 /src/main/resources/*.yml
 /src/main/resources/*.json
+/src/main/resources/firesbase/**
 
