@@ -78,4 +78,21 @@ public class KakaoOAuthService implements OAuthService {
             case ACCESS_TOKEN -> key;
         };
     }
+
+    public KakaoAuthTokenResponse getKakaoAccessToken(String authCode) {
+        // KAKAO 토큰 요청
+        KakaoAuthTokenResponse kakaoAuthTokenResponse = kakaoAuthClient.requestAuthToken(
+                GRANT_TYPE_AUTHORIZATION_CODE,
+                properties.getClientKey(),
+                properties.getStaticAccessTokenRedirectUri(),
+                authCode
+        );
+
+        // TODO: 2023/12/15 인증 실패 Exception 추가
+        if (kakaoAuthTokenResponse == null) {
+            throw new RuntimeException("KAKAO 인증에 실패했습니다.");
+        }
+
+        return kakaoAuthTokenResponse;
+    }
 }
