@@ -39,7 +39,7 @@ public class User extends BaseTimeEntity {
 
     private Double latitude;
 
-    public User(String name, String phoneNumber, OAuthType oauthType, String oauthId, double longitude, double latitude) {
+    public User(String name, String phoneNumber, OAuthType oauthType, String oauthId, Double longitude, Double latitude) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.oauthType = oauthType;
