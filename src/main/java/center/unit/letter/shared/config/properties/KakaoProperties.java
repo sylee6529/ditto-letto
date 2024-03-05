@@ -13,4 +13,5 @@ public class KakaoProperties {
 
     private String clientKey;
     private String redirectUri;
+    private String staticAccessTokenRedirectUri;
 }

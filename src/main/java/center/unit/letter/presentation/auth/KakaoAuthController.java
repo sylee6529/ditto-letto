@@ -8,6 +8,7 @@ import center.unit.letter.domain.user.User;
 import center.unit.letter.presentation.auth.dto.request.LoginByOAuthAccessTokenRequest;
 import center.unit.letter.presentation.auth.dto.request.SignUpRequest;
 import center.unit.letter.presentation.auth.dto.response.AccessTokenResponse;
+import center.unit.letter.presentation.auth.dto.response.KakaoAuthTokenResponse;
 import center.unit.letter.presentation.auth.dto.response.SignUpResponse;
 import center.unit.letter.shared.response.CommonResponse;
 import center.unit.letter.shared.response.SingleCommonResponse;
@@ -50,5 +51,10 @@ public class KakaoAuthController {
     @PostMapping("/login/token")
     public SingleCommonResponse<AccessTokenResponse> loginByKakaoOAuthToken(@RequestBody LoginByOAuthAccessTokenRequest request) {
         return SingleCommonResponse.ok(loginService.execute(OAuthType.KAKAO, GrantType.ACCESS_TOKEN, request.accessToken()));
+    }
+
+    @GetMapping("/access-token")
+    public SingleCommonResponse<KakaoAuthTokenResponse> getKakaoAccessToken(@RequestParam("code") String code) {
+        return SingleCommonResponse.ok(loginService.getKakaoAccessToken(OAuthType.KAKAO, code));
     }
 }
