@@ -25,12 +25,7 @@ public class WithdrawUserService {
         List<Contact> contacts = contactRepository.findByUser(user);
         List<PhoneNumberUpdateLog> logs = phoneNumberUpdateLogRepository.findAllByUser(user);
 
-        WithdrawLog withdrawLog = new WithdrawLog(
-                user.getName(),
-                user.getOauthType(),
-                user.getOauthId(),
-                reason
-        );
+        WithdrawLog withdrawLog = new WithdrawLog(user, reason);
 
         withdrawLogRepository.save(withdrawLog);
 

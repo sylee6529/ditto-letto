@@ -24,6 +24,9 @@ public class WithdrawLog {
 
     private String name;
 
+    @Column(nullable = false, name = "user_id")
+    private Long userId;
+
     @Column(nullable = false, name = "oauth_type")
     @Enumerated(EnumType.STRING)
     private OAuthType oauthType;
@@ -33,10 +36,11 @@ public class WithdrawLog {
 
     private String reason;
 
-    public WithdrawLog(String name, OAuthType oauthType, String oauthId, String reason) {
-        this.name = name;
-        this.oauthType = oauthType;
-        this.oauthId = oauthId;
+    public WithdrawLog(User user, String reason) {
+        this.name = user.getName();
+        this.userId = user.getId();
+        this.oauthType = user.getOauthType();
+        this.oauthId = user.getOauthId();
         this.reason = reason;
     }
 }
