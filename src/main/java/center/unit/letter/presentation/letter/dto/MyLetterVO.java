@@ -34,11 +34,12 @@ public class MyLetterVO {
         this.phoneNumber = phoneNumber;
     }
 
-    public MyLetterVO(Long id, String myLetterType, MediumType mediumType, LocalDateTime createdAt, LocalDateTime arriveAt) {
+    public MyLetterVO(Long id, String myLetterType, MediumType mediumType, LocalDateTime createdAt, LocalDateTime arriveAt, String previewText) {
         this.id = id;
         this.myLetterType = myLetterType;
         this.mediumType = mediumType;
         this.createdAt = createdAt;
         this.arriveAt = arriveAt;
+        this.previewText = previewText;
     }
 }
