@@ -1,6 +1,7 @@
 package center.unit.letter.domain.user.service;
 
 import center.unit.letter.domain.user.User;
+import center.unit.letter.domain.user.exception.UserNotFoundException;
 import center.unit.letter.infrastructure.persistence.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,11 +14,11 @@ public class UserFacade {
 
     public User getUser(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     public User getUserById(long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
+                .orElseThrow(UserNotFoundException::new);
     }
 }
