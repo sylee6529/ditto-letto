@@ -1,7 +1,10 @@
 package center.unit.letter.application.letter;
 
+import center.unit.letter.application.fcm.FCMNotificationService;
 import center.unit.letter.infrastructure.persistence.letter.LetterRepository;
 import java.time.LocalDateTime;
+
+import center.unit.letter.presentation.fcm.dto.request.FCMNotificationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LetterArriveCheckScheduler {
 
     private final LetterRepository letterRepository;
+    private final FCMNotificationService fcmNotificationService;
 
     @Scheduled(fixedDelay = 5000)
     @Transactional
@@ -27,7 +31,12 @@ public class LetterArriveCheckScheduler {
                         letter.getFrom().getPhoneNumber(),
                         letter.getTo().getPhoneNumber()
                     );
-                    // TODO: push notification 발신 추가 필요
+
+                    fcmNotificationService.sendNotification(new FCMNotificationRequest(
+                        letter.getTo().getId(),
+                        "\uD83D\uDC8C 새로운 편지가 도착했어요!",
+                            letter.getPreviewText()
+                    ));
                 }
             });
     }

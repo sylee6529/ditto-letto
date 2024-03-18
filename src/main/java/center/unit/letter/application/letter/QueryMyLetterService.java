@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class QueryMyLetterService {
-    private final static int MAX_PREVIEW_TEXT_LENGTH = 25;
+
     private final LetterRepository letterRepository;
     private final ContactRepository contactRepository;
     private final UserRepository userRepository;
@@ -41,7 +41,7 @@ public class QueryMyLetterService {
 
             if(!userRepository.existsById(otherUser.getId())) {
                 MyLetterType myLetterType = MyLetterType.determineLetterType(false, letter.isArrived(), isSendingLetter);
-                String previewText = myLetterType.equals(MyLetterType.WAITING)? getPreviewText(letter.getText()) : null;
+                String previewText = myLetterType.equals(MyLetterType.WAITING)? letter.getPreviewText() : null;
 
                 myLetters.add(
                         new MyLetterVO(
@@ -58,7 +58,7 @@ public class QueryMyLetterService {
                 boolean isContact = contactRepository.existsByUserAndPhoneNumber(user, phoneNumber);
                 MyLetterType myLetterType = MyLetterType.determineLetterType(isContact, letter.isArrived(), isSendingLetter);
                 Contact contact = contactRepository.findByUserAndPhoneNumber(user, phoneNumber);
-                String previewText = myLetterType.equals(MyLetterType.WAITING)? getPreviewText(letter.getText()) : null;
+                String previewText = myLetterType.equals(MyLetterType.WAITING)? letter.getPreviewText() : null;
 
                 myLetters.add(
                         new MyLetterVO(
@@ -76,7 +76,5 @@ public class QueryMyLetterService {
         });
     }
 
-    private String getPreviewText(String text) {
-        return text.length() > MAX_PREVIEW_TEXT_LENGTH ? text.substring(0, MAX_PREVIEW_TEXT_LENGTH) : text;
-    }
+
 }

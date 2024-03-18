@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "tbl_letter")
 @Entity
 public class Letter extends BaseTimeEntity {
+    private final static int MAX_PREVIEW_TEXT_LENGTH = 25;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -90,5 +91,9 @@ public class Letter extends BaseTimeEntity {
         Duration elapsedTime = Duration.between(getCreatedAt(), currentTime);
 
         return (int) (elapsedTime.toMillis() / slotDuration) + 1;
+    }
+
+    public String getPreviewText() {
+        return this.text.length() > MAX_PREVIEW_TEXT_LENGTH ? this.text.substring(0, MAX_PREVIEW_TEXT_LENGTH) + "..." : text;
     }
 }
