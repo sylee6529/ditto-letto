@@ -28,8 +28,8 @@ public class LetterArriveCheckScheduler {
                     letter.arrive();
                     log.info(
                         "letter arrived from {} to {}",
-                        letter.getFrom().getPhoneNumber(),
-                        letter.getTo().getPhoneNumber()
+                        letter.getFrom().getId(),
+                        letter.getTo().getId()
                     );
 
                     fcmNotificationService.sendNotification(new FCMNotificationRequest(
