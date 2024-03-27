@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
-@AllArgsConstructor
 public class MyLetterResponse {
     private Long id;
     private String myLetterType;
