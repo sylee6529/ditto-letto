@@ -1,7 +1,7 @@
 package center.unit.letter.shared.util.vo;
 
-import center.unit.letter.domain.letter.exception.LetterErrorCode;
-import center.unit.letter.domain.letter.exception.LetterException;
+import center.unit.letter.domain.letter.exception.base.LetterErrorCode;
+import center.unit.letter.domain.letter.exception.base.LetterException;
 import lombok.Getter;
 
 @Getter
@@ -21,7 +21,7 @@ public class Location {
         double endLon = location.getLongitude();
 
         if (startLat > 90 || startLat < -90 || endLat > 180 || endLat < -180) {
-            throw new LetterException(LetterErrorCode.INVALID_LOCATION_VALUE);
+            throw new LetterException(LetterErrorCode.INVALID_LOCATION);
         }
 
         if (startLon == endLon && startLat == endLat) {
