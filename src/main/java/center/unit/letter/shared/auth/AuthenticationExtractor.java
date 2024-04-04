@@ -1,5 +1,7 @@
 package center.unit.letter.shared.auth;
 
+import center.unit.letter.domain.auth.exception.InvalidPrefixException;
+import center.unit.letter.domain.auth.exception.TokenNotFoundException;
 import center.unit.letter.shared.config.properties.JwtProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -16,11 +18,11 @@ public class AuthenticationExtractor {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authorizationHeader == null || authorizationHeader.isBlank()) {
-            throw new IllegalArgumentException("token이 없습니다");
+            throw new TokenNotFoundException();
         }
 
         if (!authorizationHeader.startsWith(jwtProperties.getPrefix())) {
-            throw new IllegalArgumentException("토큰의 접두사가 올바르지 않습니다");
+            throw new InvalidPrefixException();
         }
 
         return authorizationHeader.replace(jwtProperties.getPrefix(), "").trim();
