@@ -1,15 +1,21 @@
 package center.unit.letter.domain.auth;
 
+import center.unit.letter.domain.auth.exception.ExpiredTokenException;
+import center.unit.letter.domain.auth.exception.InvalidTokenException;
 import center.unit.letter.domain.user.User;
+import center.unit.letter.domain.user.exception.UserNotFoundException;
 import center.unit.letter.domain.user.service.UserFacade;
 import center.unit.letter.shared.config.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +46,8 @@ public class TokenService {
     }
 
     public User getUser(String token) {
-        return userFacade.getUser(getPhoneNumber(token));
+        return Optional.ofNullable(userFacade.getUser(getPhoneNumber(token)))
+                       .orElseThrow(UserNotFoundException::new);
     }
 
     public String getPhoneNumber(String phoneNumber) {
@@ -54,8 +61,10 @@ public class TokenService {
                            .build()
                            .parseClaimsJws(token)
                            .getBody();
+        }  catch (ExpiredJwtException expiredJwtException) {
+            throw new ExpiredTokenException();
         } catch (Exception e) {
-            throw new IllegalArgumentException();
+            throw new InvalidTokenException();
         }
     }
 
