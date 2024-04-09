@@ -1,5 +1,6 @@
 package center.unit.letter.presentation.letter.dto.response;
 
+import center.unit.letter.domain.contact.Contact;
 import center.unit.letter.domain.letter.Letter;
 import center.unit.letter.domain.letter.type.LetterType;
 import center.unit.letter.domain.letter.type.MediumType;
@@ -15,17 +16,19 @@ public class LetterResponse {
     private Long id;
     private String text;
     private LocalDate sentAt;
-    private String from;
     private MediumType mediumType;
     private LetterType type;
     private Integer toCount;
     private Integer fromCount;
+    private String phoneNumber;
+    private Contact contact;
 
-    public LetterResponse(Letter letter, Integer toCount, Integer fromCount) {
+    public LetterResponse(Letter letter, String phoneNumber, Contact contact, Integer toCount, Integer fromCount) {
         this.id = letter.getId();
         this.text = letter.getText();
         this.sentAt = letter.getCreatedAt().toLocalDate();
-        this.from = letter.getFrom().getName();
+        this.phoneNumber = phoneNumber;
+        this.contact = contact;
         this.mediumType = letter.getMediumType();
         this.type = letter.getType();
         this.toCount = toCount;

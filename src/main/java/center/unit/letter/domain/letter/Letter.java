@@ -75,6 +75,15 @@ public class Letter extends BaseTimeEntity {
         if (!user.getId().equals(to.getId()) && !user.getId().equals(from.getId())) {
             throw new LetterAccessDeniedException();
         }
+    }
+
+    public Long getToId() {
+        return this.to.getId();
+    }
+
+    public Long getFromId() {
+        return this.from.getId();
+    }
 
     public void arrive() {
         this.arrived = true;
