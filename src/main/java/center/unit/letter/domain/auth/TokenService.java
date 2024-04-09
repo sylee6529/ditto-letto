@@ -1,13 +1,10 @@
 package center.unit.letter.domain.auth;
 
-import center.unit.letter.domain.auth.exception.ExpiredTokenException;
-import center.unit.letter.domain.auth.exception.InvalidTokenException;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.domain.user.exception.UserNotFoundException;
 import center.unit.letter.domain.user.service.UserFacade;
 import center.unit.letter.shared.config.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -61,10 +58,8 @@ public class TokenService {
                            .build()
                            .parseClaimsJws(token)
                            .getBody();
-        }  catch (ExpiredJwtException expiredJwtException) {
-            throw new ExpiredTokenException();
         } catch (Exception e) {
-            throw new InvalidTokenException();
+            throw new IllegalArgumentException();
         }
     }
 
