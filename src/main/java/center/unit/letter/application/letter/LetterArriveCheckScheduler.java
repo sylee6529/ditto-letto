@@ -22,22 +22,26 @@ public class LetterArriveCheckScheduler {
     @Scheduled(fixedDelay = 5000)
     @Transactional
     public void checkArriveAndPushNotification() {
-        letterRepository.findAllOfNotArrived()
-            .forEach(letter -> {
-                if (LocalDateTime.now().isAfter(letter.getArriveAt())) {
-                    letter.arrive();
-                    log.info(
-                        "letter arrived from {} to {}",
-                        letter.getFrom().getId(),
-                        letter.getTo().getId()
-                    );
+        try {
+            letterRepository.findAllOfNotArrived()
+                    .forEach(letter -> {
+                        if (LocalDateTime.now().isAfter(letter.getArriveAt())) {
+                            letter.arrive();
+                            log.info(
+                                    "letter arrived from {} to {}",
+                                    letter.getFrom().getId(),
+                                    letter.getTo().getId()
+                            );
 
-                    fcmNotificationService.sendNotification(new FCMNotificationRequest(
-                        letter.getTo().getId(),
-                        "\uD83D\uDC8C 새로운 편지가 도착했어요!",
-                            letter.getPreviewText()
-                    ));
-                }
-            });
+                            fcmNotificationService.sendNotification(new FCMNotificationRequest(
+                                    letter.getTo().getId(),
+                                    "\uD83D\uDC8C 새로운 편지가 도착했어요!",
+                                    letter.getPreviewText()
+                            ));
+                        }
+                    });
+        } catch (Exception e) {
+            log.error("탈퇴한 유저의 편지는 전달될 수 없습니다.", e);
+        }
     }
 }
