@@ -41,7 +41,7 @@ public class QueryMyLetterService {
 
             if(!userRepository.existsById(otherUser.getId())) {
                 MyLetterType myLetterType = MyLetterType.determineLetterType(false, letter.isArrived(), isSendingLetter);
-                String previewText = myLetterType.equals(MyLetterType.WAITING)? letter.getPreviewText() : null;
+                String previewText = myLetterType == MyLetterType.WAITING? letter.getPreviewText() : null;
 
                 myLetters.add(
                         new MyLetterVO(
