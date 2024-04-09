@@ -1,5 +1,6 @@
 package center.unit.letter.domain.letter;
 
+import center.unit.letter.domain.letter.exception.LetterAccessDeniedException;
 import center.unit.letter.domain.letter.type.LetterType;
 import center.unit.letter.domain.letter.type.MediumType;
 import center.unit.letter.domain.user.User;
@@ -70,11 +71,10 @@ public class Letter extends BaseTimeEntity {
         this.arrived = false;
     }
 
-    public void isTo(User user) {
-        if (!user.getId().equals(to.getId())) {
-            throw new IllegalArgumentException("권한이 없습니다.");
+    public void isFromOrTo(User user) {
+        if (!user.getId().equals(to.getId()) && !user.getId().equals(from.getId())) {
+            throw new LetterAccessDeniedException();
         }
-    }
 
     public void arrive() {
         this.arrived = true;
