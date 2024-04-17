@@ -30,11 +30,14 @@ import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.Charsets;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AppleOAuthService implements OAuthService {
@@ -48,6 +51,7 @@ public class AppleOAuthService implements OAuthService {
     GrantType.ACCESS_TOKEN 은 모바일을 통해서 들어오고 이가 ID TOKEN 이라고 가정함!
      */
     @Override
+    @Transactional(readOnly = true)
     public User getUserByOAuth(GrantType grantType, String key) {
         String idToken = switch (grantType) {
             case CODE -> getIdTokenByOAuthCode(key);
@@ -161,6 +165,7 @@ public class AppleOAuthService implements OAuthService {
                            .parseSignedClaims(idToken)
                            .getPayload();
         } catch (Exception e) {
+            log.error("Apple Token Validate Exception: {}", e.toString());
             throw new BaseException(GlobalErrorCode.INTERNAL_SERVER_ERROR);
         }
     }

@@ -2,8 +2,10 @@ package center.unit.letter.domain.user;
 
 import center.unit.letter.shared.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,6 +21,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "tbl_phone_number_log")
 @Entity
 public class PhoneNumberUpdateLog extends BaseTimeEntity {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -30,7 +33,7 @@ public class PhoneNumberUpdateLog extends BaseTimeEntity {
     private String afterPhoneNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
     public PhoneNumberUpdateLog(String beforePhoneNumber, String afterPhoneNumber, User user) {

@@ -4,6 +4,7 @@ import center.unit.letter.infrastructure.auth.apple.dto.AppleAuthKeysResponseDTO
 import center.unit.letter.infrastructure.auth.apple.dto.AppleTokenResponseDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 
@@ -19,6 +20,6 @@ public interface AppleAuthClient {
             @RequestPart(value = "code") String code
     );
 
-    @PostMapping(value = "/auth/keys")
+    @GetMapping(value = "/auth/keys")
     AppleAuthKeysResponseDTO getAppleAuthKeys();
 }

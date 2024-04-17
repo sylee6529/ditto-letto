@@ -4,9 +4,11 @@ import center.unit.letter.application.user.PhoneNumberDuplicateCheckService;
 import center.unit.letter.application.user.QueryUserService;
 import center.unit.letter.application.user.UpdateUserPhoneNumberService;
 import center.unit.letter.application.user.UpdateUserService;
+import center.unit.letter.application.user.WithdrawUserService;
 import center.unit.letter.domain.user.User;
 import center.unit.letter.presentation.user.dto.request.UpdateUserPhoneNumberRequest;
 import center.unit.letter.presentation.user.dto.request.UpdateUserRequest;
+import center.unit.letter.presentation.user.dto.request.WithdrawRequest;
 import center.unit.letter.presentation.user.dto.response.PhoneNumberDuplicateCheckResponse;
 import center.unit.letter.presentation.user.dto.response.UserResponse;
 import center.unit.letter.shared.auth.AuthenticationPrincipal;
@@ -16,6 +18,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +35,7 @@ public class UserController {
     private final UpdateUserService updateUserService;
     private final UpdateUserPhoneNumberService updateUserPhoneNumberService;
     private final PhoneNumberDuplicateCheckService phoneNumberDuplicateCheckService;
+    private final WithdrawUserService withdrawUserService;
 
     @GetMapping
     public SingleCommonResponse<UserResponse> getUser(
@@ -42,7 +46,7 @@ public class UserController {
         );
     }
 
-    // TODO: 12/3/23 UserPhoneNumber 변경을 포함하고 있어서 수 정이 필요할 것 같습니다.
+    // TODO: 12/3/23 UserPhoneNumber 변경을 포함하고 있어서 수정이 필요할 것 같습니다.
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping
     public void updateUser(
@@ -57,12 +61,18 @@ public class UserController {
     public void updatePhoneNumber(
             @AuthenticationPrincipal User user,
             @RequestBody @Valid UpdateUserPhoneNumberRequest request
-            ) {
+    ) {
         updateUserPhoneNumberService.execute(user, request);
     }
 
     @GetMapping("/phone-number/duplicate-check")
     public SingleCommonResponse<PhoneNumberDuplicateCheckResponse> phoneNumberDuplicateCheck(@RequestParam(value = "phone-number") String phoneNumber) {
         return CommonResponse.ok(phoneNumberDuplicateCheckService.execute(phoneNumber));
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping("/withdraw")
+    public void withdrawUser(@AuthenticationPrincipal User user, @RequestBody WithdrawRequest request) {
+        withdrawUserService.withdrawUser(user, request.getReason());
     }
 }

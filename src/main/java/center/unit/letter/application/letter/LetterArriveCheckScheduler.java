@@ -1,7 +1,10 @@
 package center.unit.letter.application.letter;
 
+import center.unit.letter.application.fcm.FCMNotificationService;
 import center.unit.letter.infrastructure.persistence.letter.LetterRepository;
 import java.time.LocalDateTime;
+
+import center.unit.letter.presentation.fcm.dto.request.FCMNotificationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,21 +17,31 @@ import org.springframework.transaction.annotation.Transactional;
 public class LetterArriveCheckScheduler {
 
     private final LetterRepository letterRepository;
+    private final FCMNotificationService fcmNotificationService;
 
     @Scheduled(fixedDelay = 5000)
     @Transactional
     public void checkArriveAndPushNotification() {
-        letterRepository.findAllOfNotArrived()
-            .forEach(letter -> {
-                if (LocalDateTime.now().isAfter(letter.getArriveAt())) {
-                    letter.arrive();
-                    log.info(
-                        "letter arrived from {} to {}",
-                        letter.getFrom().getPhoneNumber(),
-                        letter.getTo().getPhoneNumber()
-                    );
-                    // TODO: push notification 발신 추가 필요
-                }
-            });
+        try {
+            letterRepository.findAllOfNotArrived()
+                    .forEach(letter -> {
+                        if (LocalDateTime.now().isAfter(letter.getArriveAt())) {
+                            letter.arrive();
+                            log.info(
+                                    "letter arrived from {} to {}",
+                                    letter.getFrom().getId(),
+                                    letter.getTo().getId()
+                            );
+
+                            fcmNotificationService.sendNotification(new FCMNotificationRequest(
+                                    letter.getTo().getId(),
+                                    "\uD83D\uDC8C 새로운 편지가 도착했어요!",
+                                    letter.getPreviewText()
+                            ));
+                        }
+                    });
+        } catch (Exception e) {
+            log.error("탈퇴한 유저의 편지는 전달될 수 없습니다.", e);
+        }
     }
 }
