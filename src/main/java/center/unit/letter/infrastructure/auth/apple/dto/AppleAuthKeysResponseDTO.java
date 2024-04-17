@@ -34,12 +34,14 @@ public class AppleAuthKeysResponseDTO {
         String e;
 
         @JsonCreator
-        public AppleAuthKey(@JsonProperty("kty") String kty,
+        public AppleAuthKey(
+                @JsonProperty("kty") String kty,
                 @JsonProperty("kid") String kid,
                 @JsonProperty("use") String use,
                 @JsonProperty("alg") String alg,
                 @JsonProperty("n") String n,
-                @JsonProperty("e") String e) {
+                @JsonProperty("e") String e
+        ) {
             this.kty = kty;
             this.kid = kid;
             this.use = use;
