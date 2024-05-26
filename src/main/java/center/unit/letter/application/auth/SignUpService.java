@@ -7,6 +7,8 @@ import center.unit.letter.domain.user.User;
 import center.unit.letter.infrastructure.auth.OAuthFactory;
 import center.unit.letter.infrastructure.auth.OAuthService;
 import center.unit.letter.infrastructure.persistence.user.UserRepository;
+import java.util.List;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +17,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SignUpService {
 
+    private final static List<String> phoneNumberPrefix = List.of("010", "011", "019", "016", "017");
+
     private final OAuthFactory oAuthFactory;
     private final UserRepository userRepository;
 
     @Transactional
-    public User execute(OAuthType oAuthType, GrantType grantType, String oauthKey, String phoneNumber, Double longitude, Double latitude) {
+    public User execute(OAuthType oAuthType, GrantType grantType, String oauthKey, Double longitude, Double latitude) {
         OAuthService oAuthService = oAuthFactory.getInstance(oAuthType);
+
+        // 중복된 전화번호가 생성되지 않을 때까지 랜덤 생성
+        String phoneNumber = createRandomPhoneNumber();
+        while (userRepository.findByPhoneNumber(phoneNumber).isPresent()) {
+            phoneNumber = createRandomPhoneNumber();
+        }
 
         OAuthUserInfo oAuthUserInfo = oAuthService.getOAuthUserInfo(grantType, oauthKey);
         User user = new User(
@@ -33,5 +43,17 @@ public class SignUpService {
         );
 
         return userRepository.save(user);
+    }
+
+    private String createRandomPhoneNumber() {
+        Random random = new Random();
+        StringBuilder phoneNumber = new StringBuilder(phoneNumberPrefix.get(random.nextInt(phoneNumberPrefix.size())));
+
+        for (int i = 0; i < 8; i++) {
+            int randomNumber = random.nextInt(10);
+            phoneNumber.append(randomNumber);
+        }
+
+        return phoneNumber.toString();
     }
 }

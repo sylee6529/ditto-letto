@@ -35,7 +35,6 @@ public class KakaoAuthController {
                 OAuthType.KAKAO,
                 request.getGrantType(),
                 request.getKey(),
-                request.getPhoneNumber(),
                 request.getLongitude(),
                 request.getLatitude()
         );

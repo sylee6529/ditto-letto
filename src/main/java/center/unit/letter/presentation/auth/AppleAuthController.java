@@ -34,7 +34,6 @@ public class AppleAuthController {
                 OAuthType.APPLE,
                 request.getGrantType(),
                 request.getKey(),
-                request.getPhoneNumber(),
                 request.getLongitude(),
                 request.getLatitude()
         );
