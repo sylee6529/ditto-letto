@@ -48,6 +48,7 @@
 - `if (편지 받는 사람의 위치 설정여부 == false) { 편지를 보낼 수 없다. }` // 거리 계산 불가하므로
 - `if (편지 받는 사람의 위치 설정 여부 == true && (편지 보내는 사람의 발송 시점 당시 위치 정보 == true || 편지 보내는 사람의 위치 설정 여부 == true) { 이 경우는 편지를 보낼 수 있다. }`
   - `편지 받는 사람의 위치 설정 여부 == false`인 경우는, 위의 if문에서 걸러지므로 `편지 보내는 사람의 발송 시점 당시 위치 정보 == flase && 편지 보내는 사람의 위치 설정 여부 == false`인 경우 편지를 보낼 수 없다.
+    
   ```java
   User toUser = userFacade.getUser(request.getToPhoneNumber());
   validate(request, toUser, fromUser);
@@ -144,18 +145,18 @@
 ⚠️ 문제점: 탈퇴 유저의 경우 Hard Delete로 유저를 삭제하기로 했는데, 편지 조회 부분에서 User Entity 접근이 필수적이기 때문에 Runtime Exception 다수 발생
 
 ✔️ 해결: 편지 조회 관련 유저 접근 전, 존재하는 유저인지 체크한다.
-  - 다만, 탈퇴 유저는 DB 상에 존재하지 않지만 (마치 전화번호를 바꾼 사람처럼) '전화번호부'(contact)에는 존재해야 하는 기획 상, <br/>
-      친구인 경우 Contact 정보로 탈퇴 유저의 편지에 접근한다.
+  - 다만, 탈퇴 유저는 DB 상에 존재하지 않지만 (마치 전화번호를 바꾼 사람처럼)  <br/>
+  '전화번호부'(contact)에는 존재해야 하는 기획 상, 친구인 경우 Contact 정보로 탈퇴 유저의 편지에 접근한다.
 
   
-  ```java
-  User otherUser = isSendingLetter? letter.getTo() : letter.getFrom();
-  if(!userRepository.existsById(otherUser.getId())) {
-      // 탈퇴하지 않은 유저의 편지 조회 로직
-  } else {
-      // 탈퇴한 유저인 경우의 편지 조회 로직
-  }
-  ```
+      ```java
+      User otherUser = isSendingLetter? letter.getTo() : letter.getFrom();
+      if(!userRepository.existsById(otherUser.getId())) {
+          // 탈퇴하지 않은 유저의 편지 조회 로직
+      } else {
+          // 탈퇴한 유저인 경우의 편지 조회 로직
+      }
+      ```
 
 
 
